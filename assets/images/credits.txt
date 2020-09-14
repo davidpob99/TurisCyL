@@ -1,0 +1,26 @@
+Bar:
+Cafetería:
+Restaurante:
+Salón de banquetes:
+
+Albergue: <span>Photo by <a href="https://unsplash.com/@marcusloke?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Marcus Loke</a> on <a href="https://unsplash.com/s/photos/hostel?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span>
+Hotel:
+Apartamento
+Camping: <span>Photo by <a href="https://unsplash.com/@tlisbin?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Tommy Lisbin</a> on <a href="https://unsplash.com/s/photos/camping?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span>
+Turismo Rural: <span>Photo by <a href="https://unsplash.com/@henarlanga?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Henar Langa</a> on <a href="https://unsplash.com/s/photos/castilla?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span>
+Vivienda: <span>Photo by <a href="https://unsplash.com/@joakimaglo?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Joakim Aglo</a> on <a href="https://unsplash.com/s/photos/house-spain?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span>
+
+Monumentos: Fotografía por Santiago López Pastor en https://flic.kr/p/LYhKR9
+Museos: Fotografía por Raúl Villalón en https://flic.kr/p/Gj5E5s
+
+Evento: Fotografía por Santiago López Pastor en https://flic.kr/p/HaWGnk
+Actividad Turística: <span>Photo by <a href="https://unsplash.com/@zubearasyraf?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Zubair Asyraf</a> on <a href="https://unsplash.com/s/photos/turistic-activity?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span>
+Guía: <span>Photo by <a href="https://unsplash.com/@capturethemoment?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Janis Oppliger</a> on <a href="https://unsplash.com/s/photos/tour?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span>
+Turismo Activo: <span>Photo by <a href="https://unsplash.com/@ihsanus?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">ihsan ulusoy</a> on <a href="https://unsplash.com/s/photos/treking?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span>
+
+Donde comer: 
+Donde dormir: <span>Photo by <a href="https://unsplash.com/@chris_jolly?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Christopher Jolly</a> on <a href="https://unsplash.com/s/photos/bed?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span>
+Que ver: Fotografía por Joan en https://flic.kr/p/L9XPRm
+Que hacer: <span>Photo by <a href="https://unsplash.com/@icehoundphotography?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">David Murray Chambers</a> on <a href="https://unsplash.com/s/photos/canoe?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span>
+Más información: Fotografía por Jesús Pérez Pacheco en https://flic.kr/p/9g3rHe
+Espacios Naturales: Fotografía por willi_bremen en https://flic.kr/p/WpdYfJ

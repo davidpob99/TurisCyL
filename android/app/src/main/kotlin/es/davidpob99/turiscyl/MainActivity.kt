@@ -1,0 +1,5 @@
+package es.davidpob99.turiscyl
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity()
