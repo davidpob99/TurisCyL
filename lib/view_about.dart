@@ -39,7 +39,7 @@ class VistaAcercaDe extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  "Versión 0.1.0",
+                  "Versión 0.1.1",
                   style: TextStyle(color: Colors.grey),
                 ),
               ),
@@ -151,7 +151,7 @@ class VistaAcercaDe extends StatelessWidget {
               ),
               FlatButton(
                 onPressed: () {
-                  Utils().openUrl("https://www.gnu.org/licenses/gpl-3.0.txt");
+                  Utils().openUrl("https://github.com/davidpob99/TurisCyL");
                 },
                 child: Row(
                   children: [

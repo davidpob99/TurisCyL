@@ -24,6 +24,7 @@ import 'package:foursquare/src/api.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart';
 import 'package:share/share.dart';
+import 'package:toast/toast.dart';
 import 'package:turiscyl/crear_lista.dart';
 import 'package:turiscyl/db_handler.dart';
 import 'package:turiscyl/models/albergue.dart';
@@ -136,7 +137,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
       case Evento.NOMBRE:
         return new FloatingActionButton(
             child: Icon(
-              Icons.calendar_today,
+              IconsTurisCyL.calendar_plus
             ),
             onPressed: () {
               final Event event = Event(
@@ -297,7 +298,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                       ? widget.elemento.posicion
                                       : snapshot.data.posicion,
                                   builder: (ctx) => new Container(
-                                    child: Icon(Icons.place),
+                                    child: Icon(Icons.place, color: Colores().primario,),
                                   ),
                                 ),
                               ],
@@ -379,7 +380,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                       height: 80.0,
                       point: widget.elemento.posicion,
                       builder: (ctx) => new Container(
-                        child: Icon(Icons.place),
+                        child: Icon(Icons.place, color:Colores().primario),
                       ),
                     ),
                   ],
@@ -584,6 +585,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                 "tel:${widget.elemento.telefono1}");
                                           },
                                         ),
+                                        Text("\t"),
                                         InkWell(
                                           child: Text(
                                             "${widget.elemento.telefono2}",
@@ -595,6 +597,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                 "tel:${widget.elemento.telefono2}");
                                           },
                                         ),
+                                        Text("\t"),
                                         InkWell(
                                           child: Text(
                                             "${widget.elemento.telefono3}",
@@ -1017,6 +1020,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   "tel:${widget.elemento.telefono1}");
                                             },
                                           ),
+                                          Text("\t"),
                                           InkWell(
                                             child: Text(
                                               "${widget.elemento.telefono2}",
@@ -1028,6 +1032,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   "tel:${widget.elemento.telefono2}");
                                             },
                                           ),
+                                          Text("\t"),
                                           InkWell(
                                             child: Text(
                                               "${widget.elemento.telefono3}",
@@ -1453,6 +1458,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   "tel:${widget.elemento.telefono1}");
                                             },
                                           ),
+                                          Text("\t"),
                                           InkWell(
                                             child: Text(
                                               "${widget.elemento.telefono2}",
@@ -1464,6 +1470,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   "tel:${widget.elemento.telefono2}");
                                             },
                                           ),
+                                          Text("\t"),
                                           InkWell(
                                             child: Text(
                                               "${widget.elemento.telefono3}",
@@ -1919,6 +1926,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   "tel:${widget.elemento.telefono1}");
                                             },
                                           ),
+                                          Text("\t"),
                                           InkWell(
                                             child: Text(
                                               "${widget.elemento.telefono2}",
@@ -1930,6 +1938,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   "tel:${widget.elemento.telefono2}");
                                             },
                                           ),
+                                          Text("\t"),
                                           InkWell(
                                             child: Text(
                                               "${widget.elemento.telefono3}",
@@ -2008,7 +2017,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceEvenly,
                                         children: [
-                                          Icon(IconsTurisCyL.silverware_fork_knife,
+                                          Icon(IconsTurisCyL.barcode,
                                               color: Colores().dark),
                                           Text(
                                             widget.elemento.numeroRegistro,
@@ -2357,6 +2366,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   "tel:${widget.elemento.telefono1}");
                                             },
                                           ),
+                                          Text("\t"),
                                           InkWell(
                                             child: Text(
                                               "${widget.elemento.telefono2}",
@@ -2368,6 +2378,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   "tel:${widget.elemento.telefono2}");
                                             },
                                           ),
+                                          Text("\t"),
                                           InkWell(
                                             child: Text(
                                               "${widget.elemento.telefono3}",
@@ -2765,6 +2776,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   "tel:${widget.elemento.telefono1}");
                                             },
                                           ),
+                                          Text("\t"),
                                           InkWell(
                                             child: Text(
                                               "${widget.elemento.telefono2}",
@@ -2776,6 +2788,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   "tel:${widget.elemento.telefono2}");
                                             },
                                           ),
+                                          Text("\t"),
                                           InkWell(
                                             child: Text(
                                               "${widget.elemento.telefono3}",
@@ -3173,6 +3186,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   "tel:${widget.elemento.telefono1}");
                                             },
                                           ),
+                                          Text("\t"),
                                           InkWell(
                                             child: Text(
                                               "${widget.elemento.telefono2}",
@@ -3184,6 +3198,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   "tel:${widget.elemento.telefono2}");
                                             },
                                           ),
+                                          Text("\t"),
                                           InkWell(
                                             child: Text(
                                               "${widget.elemento.telefono3}",
@@ -3581,6 +3596,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   "tel:${widget.elemento.telefono1}");
                                             },
                                           ),
+                                          Text("\t"),
                                           InkWell(
                                             child: Text(
                                               "${widget.elemento.telefono2}",
@@ -3592,6 +3608,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   "tel:${widget.elemento.telefono2}");
                                             },
                                           ),
+                                          Text("\t"),
                                           InkWell(
                                             child: Text(
                                               "${widget.elemento.telefono3}",
@@ -4017,6 +4034,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   "tel:${widget.elemento.telefono1}");
                                             },
                                           ),
+                                          Text("\t"),
                                           InkWell(
                                             child: Text(
                                               "${widget.elemento.telefono2}",
@@ -4028,6 +4046,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   "tel:${widget.elemento.telefono2}");
                                             },
                                           ),
+                                          Text("\t"),
                                           InkWell(
                                             child: Text(
                                               "${widget.elemento.telefono3}",
@@ -4483,6 +4502,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   "tel:${widget.elemento.telefono1}");
                                             },
                                           ),
+                                          Text("\t"),
                                           InkWell(
                                             child: Text(
                                               "${widget.elemento.telefono2}",
@@ -6005,6 +6025,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   "tel:${widget.elemento.telefono1}");
                                             },
                                           ),
+                                          Text("\t"),
                                           InkWell(
                                             child: Text(
                                               "${widget.elemento.telefono2}",
@@ -6016,6 +6037,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   "tel:${widget.elemento.telefono2}");
                                             },
                                           ),
+                                          Text("\t"),
                                           InkWell(
                                             child: Text(
                                               "${widget.elemento.telefono3}",
@@ -6293,6 +6315,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   "tel:${widget.elemento.telefono1}");
                                             },
                                           ),
+                                          Text("\t"),
                                           InkWell(
                                             child: Text(
                                               "${widget.elemento.telefono2}",
@@ -6571,6 +6594,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   "tel:${widget.elemento.telefono1}");
                                             },
                                           ),
+                                          Text("\t"),
                                           InkWell(
                                             child: Text(
                                               "${widget.elemento.telefono2}",
@@ -6582,6 +6606,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   "tel:${widget.elemento.telefono2}");
                                             },
                                           ),
+                                          Text("\t"),
                                           InkWell(
                                             child: Text(
                                               "${widget.elemento.telefono3}",
@@ -6892,6 +6917,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                     "tel:${widget.elemento.telefono1}");
                                               },
                                             ),
+                                            Text("\t"),
                                             InkWell(
                                               child: Text(
                                                 "${widget.elemento.telefono2}",
@@ -7086,21 +7112,31 @@ class _VistaDetallesState extends State<VistaDetalles> {
     });
     switch (_selectedChoice.title) {
       case 'Abrir en':
-        Utils().openUrl(
+        if(widget.elemento.posicion.latitude == -1)
+          Utils().openUrl(
             "https://www.google.com/maps/search/?api=1&query=${widget.elemento.nombre}+${widget.elemento.provincia}");
+        else
+          Utils().openUrl(
+              "https://www.google.com/maps/search/?api=1&query=${widget.elemento.posicion.latitude}, ${widget.elemento.posicion.longitude}");
         break;
       case 'Cómo llegar':
-        Utils().openUrl(
+        if(widget.elemento.posicion.latitude == -1)
+          Utils().openUrl(
             "http://maps.google.com/maps?daddr=${widget.elemento.nombre}+${widget.elemento.provincia}");
+        else
+          Utils().openUrl(
+              "http://maps.google.com/maps?daddr=${widget.elemento.posicion.latitude}, ${widget.elemento.posicion.longitude}");;
         break;
       case 'Compartir':
         Share.share(
             "${widget.elemento.nombre}\n${widget.elemento.direccion}, ${widget.elemento.cp}\n${widget.elemento.municipio}, ${widget.elemento.provincia}\nhttp://maps.google.com/maps?daddr=${widget.elemento.nombre}+${widget.elemento.provincia}");
         break;
       case 'StreetView':
-        // TODO ARREGLAR
-        Utils().openUrl(
-            "google.streetview:cbll=${widget.elemento.latitud},${widget.elemento.longitud}");
+        if(widget.elemento.posicion.latitude != -1)
+          Utils().openUrl(
+              "google.streetview:cbll=${widget.elemento.posicion.latitude},${widget.elemento.posicion.longitude}");
+        else
+          Toast.show("No está disponible StreetView en esta ubicación", context);
         break;
     }
   }

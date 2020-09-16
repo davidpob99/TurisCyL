@@ -17,6 +17,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:toast/toast.dart';
 import 'package:turiscyl/db_handler.dart';
 import 'package:turiscyl/filter_informacion.dart';
 import 'package:turiscyl/models/actividad_turistica.dart';
@@ -320,7 +321,11 @@ class _VistaInformacionState extends State<VistaInformacion> {
                       },
                     );
                   } else if (snapshot.hasError) {
-                    return Text(snapshot.error.toString());
+                    Toast.show("Se ha producido un error con la base de datos, inténtelo de nuevo por favor", context, duration: 3);
+                    return Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text("Texto del error:\n\n $snapshot.error\n\nSi el error persiste, contacte con el desarrollador"),
+                    );
                   } else {
                     return Utils().cargandoDatos();
                   }

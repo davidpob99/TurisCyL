@@ -17,6 +17,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:toast/toast.dart';
 import 'package:turiscyl/crear_lista.dart';
 import 'package:turiscyl/tabs/tab_explorar.dart';
 import 'package:turiscyl/tabs/tab_listas.dart';
@@ -151,6 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
               switch (_selectedIndex) {
                 case 0:
                   Utils().hayInternet(context);
+                  Toast.show("Actualizando los datos en segundo plano...", context, duration: 5);
                   Utils().descargarDatos();
                   break;
               }

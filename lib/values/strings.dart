@@ -1184,7 +1184,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
   static const String dondeDormir = "¿Dónde dormir?";
   static const String queVer = "¿Qué ver?";
   static const String queHacer = "¿Qué hacer?";
-  static const String masInfo = "Más información";
+  static const String masInfo = "Oficinas de turismo";
   static const String espaciosNaturales = "Espacios Naturales";
 
 }

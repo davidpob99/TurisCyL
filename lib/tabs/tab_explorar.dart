@@ -64,7 +64,7 @@ class _TabExplorarState extends State<TabExplorar> {
     return ListView(
       children: [
         Container(
-          height: 200,
+          height: 210,
           child: Card(
             semanticContainer: true,
             clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -75,7 +75,7 @@ class _TabExplorarState extends State<TabExplorar> {
                   Image.asset(
                     'assets/images/donde_comer.jpg',
                     fit: BoxFit.cover,
-                    height: 145,
+                    height: 110,
                     width: double.infinity,
                   ),
                   Padding(
@@ -84,6 +84,14 @@ class _TabExplorarState extends State<TabExplorar> {
                       Strings.dondeComer,
                       style:
                       TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8),
+                    child: Text(
+                      "Bares, cafeterías, restaurantes y salones de banquetes",
+                      style:
+                      TextStyle(fontSize: 16),
                     ),
                   )
                 ],
@@ -104,7 +112,7 @@ class _TabExplorarState extends State<TabExplorar> {
           ),
         ),
         Container(
-          height: 200,
+          height: 210,
           child: Card(
             semanticContainer: true,
             clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -115,7 +123,7 @@ class _TabExplorarState extends State<TabExplorar> {
                   Image.asset(
                     'assets/images/donde_dormir.jpg',
                     fit: BoxFit.cover,
-                    height: 145,
+                    height: 110,
                     width: double.infinity,
                   ),
                   Padding(
@@ -124,6 +132,14 @@ class _TabExplorarState extends State<TabExplorar> {
                       Strings.dondeDormir,
                       style:
                       TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8),
+                    child: Text(
+                      "Albergues, alojamientos hoteleros, apartamentos, campings, turismo rural y viviendas",
+                      style:
+                      TextStyle(fontSize: 16),
                     ),
                   )
                 ],
@@ -144,7 +160,7 @@ class _TabExplorarState extends State<TabExplorar> {
           ),
         ),
         Container(
-          height: 200,
+          height: 210,
           child: Card(
             semanticContainer: true,
             clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -155,7 +171,7 @@ class _TabExplorarState extends State<TabExplorar> {
                   Image.asset(
                     'assets/images/que_ver.jpg',
                     fit: BoxFit.cover,
-                    height: 145,
+                    height: 110,
                     width: double.infinity,
                   ),
                   Padding(
@@ -164,6 +180,14 @@ class _TabExplorarState extends State<TabExplorar> {
                       Strings.queVer,
                       style:
                       TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8),
+                    child: Text(
+                      "Monumentos y museos",
+                      style:
+                      TextStyle(fontSize: 16),
                     ),
                   )
                 ],
@@ -184,7 +208,7 @@ class _TabExplorarState extends State<TabExplorar> {
           ),
         ),
         Container(
-          height: 200,
+          height: 210,
           child: Card(
             semanticContainer: true,
             clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -195,7 +219,7 @@ class _TabExplorarState extends State<TabExplorar> {
                   Image.asset(
                     'assets/images/que_hacer.jpg',
                     fit: BoxFit.cover,
-                    height: 145,
+                    height: 110,
                     width: double.infinity,
                   ),
                   Padding(
@@ -204,6 +228,14 @@ class _TabExplorarState extends State<TabExplorar> {
                       Strings.queHacer,
                       style:
                       TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8),
+                    child: Text(
+                      "Eventos, actividades turísticas, guías de turismo y turismo activo",
+                      style:
+                      TextStyle(fontSize: 16),
                     ),
                   )
                 ],
@@ -224,7 +256,7 @@ class _TabExplorarState extends State<TabExplorar> {
           ),
         ),
         Container(
-          height: 200,
+          height: 210,
           child: Card(
             semanticContainer: true,
             clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -235,7 +267,7 @@ class _TabExplorarState extends State<TabExplorar> {
                   Image.asset(
                     'assets/images/mas_informacion.jpg',
                     fit: BoxFit.cover,
-                    height: 145,
+                    height: 110,
                     width: double.infinity,
                   ),
                   Padding(
@@ -244,6 +276,14 @@ class _TabExplorarState extends State<TabExplorar> {
                       Strings.masInfo,
                       style:
                       TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8),
+                    child: Text(
+                      "Oficinas de turismo de distintos ámbitos (municipal, provincial, ...)",
+                      style:
+                      TextStyle(fontSize: 16),
                     ),
                   )
                 ],
@@ -264,7 +304,7 @@ class _TabExplorarState extends State<TabExplorar> {
           ),
         ),
         Container(
-          height: 200,
+          height: 210,
           child: Card(
             semanticContainer: true,
             clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -275,7 +315,7 @@ class _TabExplorarState extends State<TabExplorar> {
                   Image.asset(
                     'assets/images/espacios_naturales.jpg',
                     fit: BoxFit.cover,
-                    height: 145,
+                    height: 110,
                     width: double.infinity,
                   ),
                   Padding(
@@ -284,6 +324,14 @@ class _TabExplorarState extends State<TabExplorar> {
                       Strings.espaciosNaturales,
                       style:
                       TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8),
+                    child: Text(
+                      "Conoce la Red de Espacios Naturales de Castilla y León con NaturCyL",
+                      style:
+                      TextStyle(fontSize: 16),
                     ),
                   )
                 ],

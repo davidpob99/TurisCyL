@@ -121,7 +121,7 @@ class Guia {
     _especialidades = value;
   }
 
-  String get idiomas => _idiomas;
+  String get idiomas => _idiomas.replaceAll("#", "").replaceAll("1","").replaceAll("2","").replaceAll("3","").replaceAll("4","");
 
   set idiomas(String value) {
     _idiomas = value;
