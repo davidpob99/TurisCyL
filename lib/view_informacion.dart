@@ -40,6 +40,7 @@ import 'package:turiscyl/utils.dart';
 import 'package:turiscyl/values/constantes.dart';
 import 'package:turiscyl/view_detalles.dart';
 
+import 'models/archivo.dart';
 import 'models/bar.dart';
 
 class VistaInformacion extends StatefulWidget {
@@ -100,14 +101,17 @@ class _VistaInformacionState extends State<VistaInformacion> {
       case Vivienda.NOMBRE:
         objetoElegido = Vivienda.vacio();
         break;
-    // Ver
+      // Ver
       case Monumento.NOMBRE:
         objetoElegido = Monumento.vacio();
         break;
       case Museo.NOMBRE:
         objetoElegido = Museo.vacio();
         break;
-    // Hacer
+      case Archivo.NOMBRE:
+        objetoElegido = Archivo.vacio();
+        break;
+      // Hacer
       case Evento.NOMBRE:
         objetoElegido = Evento.vacio();
         break;
@@ -126,96 +130,15 @@ class _VistaInformacionState extends State<VistaInformacion> {
     }
   }
 
-  /*void _filtroProvincias() async {
-    /*Set<String> provincias = new Set();
-    lista.forEach((e) {
-      provincias.add(e.provincia);
-    });*/
-
-    var list = await FilterList.showFilterList(
-      context,
-      allTextList: Constantes.provincias,
-      height: 450,
-      borderRadius: 20,
-      headlineText: "Selecciona provincia",
-      searchFieldHintText: "Buscar",
-      selectedTextList: provinciasSeleccionadas,
-    );
-
-    if (list != null) {
-      setState(() {
-        provinciasSeleccionadas = List.from(list);
-      });
-    }
-  }
-
-  void _filtroMunicipios() async {
-    /*Set<String> municipios = new Set();
-    lista.forEach((e) {
-      municipios.add(e.municipio);
-    });*/
-
-    var list = await FilterList.showFilterList(
-      context,
-      allTextList: Constantes.municipios,
-      height: 450,
-      borderRadius: 20,
-      headlineText: "Selecciona municipio",
-      searchFieldHintText: "Buscar",
-      selectedTextList: municipiosSeleccionadas,
-    );
-
-    if (list != null) {
-      setState(() {
-        municipiosSeleccionadas = List.from(list);
-      });
-    }
-  }*/
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.categoriaElegida)),
+      appBar: AppBar(title: Text(
+          widget.categoriaElegida.split(Utils().beforeCapitalLetter).join(
+              " "))),
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          /*Expanded(
-            flex: 1,
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                children: [
-                  FilterChip(
-                    label: Text("Provincias"),
-                    onSelected: (bool value) {
-                      _filtroProvincias();
-                    },
-                  ),
-                  FilterChip(
-                    label: Text("Municipios"),
-                    onSelected: (bool value) {
-                      _filtroMunicipios();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Padding(
-              padding: const EdgeInsets.all(15),
-              child: TextField(
-                decoration: InputDecoration(
-                    icon: Icon(Icons.search), hintText: "Buscar por nombre"),
-                onSubmitted: (String s) {
-                  setState(() {
-                    busqueda = s;
-                  });
-                },
-              ),
-            ),
-          ),*/
           Expanded(
             flex: 10,
             child: Container(
@@ -276,13 +199,18 @@ class _VistaInformacionState extends State<VistaInformacion> {
                         snapshot.data
                             .forEach((k) => lista.add(Museo.fromMap(k)));
                         break;
+                      case Archivo.NOMBRE:
+                        snapshot.data
+                            .forEach((k) => lista.add(Archivo.fromMap(k)));
+                        break;
                       case Evento.NOMBRE:
                         snapshot.data
                             .forEach((k) => lista.add(Evento.fromMap(k)));
                         break;
                       case ActividadTuristica.NOMBRE:
                         snapshot.data.forEach(
-                                (k) => lista.add(ActividadTuristica.fromMap(k)));
+                                (k) =>
+                                lista.add(ActividadTuristica.fromMap(k)));
                         break;
                       case Guia.NOMBRE:
                         snapshot.data

@@ -16,18 +16,18 @@
  */
 
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:csv/csv.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
+import 'package:turiscyl/models/archivo.dart';
 import 'package:turiscyl/values/constantes.dart';
 import 'package:turiscyl/view_bienvenida.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:http/http.dart' as http;
 
 import 'db_handler.dart';
 import 'models/actividad_turistica.dart';
@@ -51,6 +51,7 @@ import 'models/venue.dart';
 import 'models/vivienda.dart';
 
 class Utils {
+  final RegExp beforeCapitalLetter = RegExp(r"(?=[A-Z])");
 
   Utils();
 
@@ -58,13 +59,12 @@ class Utils {
 
   Future<bool> hayInternet(BuildContext context) async {
     bool result = await DataConnectionChecker().hasConnection;
-    if(result == true) {
-      print('YAY! Free cute dog pics!');
+    if (result == true) {
       return true;
     } else {
-      print('No internet :( Reason:');
-      Toast.show("No hay conexión a Internet", context);
-      print(DataConnectionChecker().lastTryResults);
+      Toast.show(
+          "No hay conexión a Internet: ${DataConnectionChecker().lastTryResults}",
+          context);
       return false;
     }
   }
@@ -137,7 +137,7 @@ class Utils {
     }
     guardarListas(guardados);
   }
-  
+
   Future<void> guardarListas(List list) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(Constantes.listas, jsonEncode(list));
@@ -161,6 +161,7 @@ class Utils {
     descargarCsv(Vivienda.vacio());
     descargarJson(Monumento.vacio());
     descargarCsv(Museo.vacio());
+    descargarCsv(Archivo.vacio());
     descargarCsv(Evento.vacio());
     descargarCsv(ActividadTuristica.vacio());
     descargarCsv(Guia.vacio());
@@ -176,11 +177,13 @@ class Utils {
     if (respuesta.statusCode == 200) {
       List<List<dynamic>> csv;
       String str = respuesta.body;
-      if(objeto.DB_NOMBRE == Museo.NOMBRE || objeto.DB_NOMBRE == Evento.NOMBRE){
+      if (objeto.DB_NOMBRE == Museo.NOMBRE ||
+          objeto.DB_NOMBRE == Evento.NOMBRE ||
+          objeto.DB_NOMBRE == Archivo.NOMBRE) {
         str.replaceAll("\n", "");
         str.replaceAll("\r", "\r\n");
       }
-      else{
+      else {
         str = str.replaceAll('"', '');
       }
       csv = CsvToListConverter(fieldDelimiter: ";").convert(str);
@@ -241,6 +244,8 @@ class Utils {
         return Monumento.JSON;
       case Museo.NOMBRE:
         return Museo.CSV;
+      case Archivo.NOMBRE:
+        return Archivo.CSV;
       case Evento.NOMBRE:
         return Evento.CSV;
       case ActividadTuristica.NOMBRE:

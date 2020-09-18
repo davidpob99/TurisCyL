@@ -15,31 +15,8 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import 'dart:convert';
-import 'dart:developer';
-
-import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
-import 'package:toast/toast.dart';
-import 'package:turiscyl/db_handler.dart';
-import 'package:turiscyl/models/actividad_turistica.dart';
-import 'package:turiscyl/models/albergue.dart';
-import 'package:turiscyl/models/alojamiento_hotelero.dart';
-import 'package:turiscyl/models/apartamento.dart';
-import 'package:turiscyl/models/bar.dart';
-import 'package:turiscyl/models/cafeteria.dart';
-import 'package:turiscyl/models/camping.dart';
-import 'package:turiscyl/models/evento.dart';
-import 'package:turiscyl/models/guia.dart';
-import 'package:turiscyl/models/monumento.dart';
-import 'package:turiscyl/models/museo.dart';
 import 'package:turiscyl/models/oficina_turismo.dart';
-import 'package:turiscyl/models/restaurante.dart';
-import 'package:turiscyl/models/salon_banquetes.dart';
-import 'package:turiscyl/models/turismo_activo.dart';
-import 'package:turiscyl/models/turismo_rural.dart';
-import 'package:turiscyl/models/venue.dart';
-import 'package:turiscyl/models/vivienda.dart';
 import 'package:turiscyl/utils.dart';
 import 'package:turiscyl/values/strings.dart';
 import 'package:turiscyl/view_categorias.dart';
@@ -185,9 +162,8 @@ class _TabExplorarState extends State<TabExplorar> {
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0, right: 8),
                     child: Text(
-                      "Monumentos y museos",
-                      style:
-                      TextStyle(fontSize: 16),
+                      "Monumentos, museos y archivos",
+                      style: TextStyle(fontSize: 16),
                     ),
                   )
                 ],

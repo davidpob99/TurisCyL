@@ -15,8 +15,6 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import 'dart:ffi';
-
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:turiscyl/db_handler.dart';
@@ -34,12 +32,11 @@ import 'package:turiscyl/models/salon_banquetes.dart';
 import 'package:turiscyl/models/turismo_activo.dart';
 import 'package:turiscyl/models/turismo_rural.dart';
 import 'package:turiscyl/models/vivienda.dart';
-import 'package:turiscyl/utils.dart';
 import 'package:turiscyl/values/constantes.dart';
-import 'package:turiscyl/values/strings.dart';
 import 'package:turiscyl/view_informacion.dart';
 
 import 'models/actividad_turistica.dart';
+import 'models/archivo.dart';
 import 'models/evento.dart';
 import 'models/monumento.dart';
 
@@ -84,11 +81,13 @@ class _FiltroInformacionState extends State<FiltroInformacion> {
         : "WHERE 0=0";
     // Discernir entre municipios y localidades
     String whereMunicipios;
-    if (widget.objetoElegido.DB_NOMBRE == Museo.NOMBRE || widget.objetoElegido.DB_NOMBRE == Evento.NOMBRE){
-      whereMunicipios  = municipiosElegidos.length > 0
+    if (widget.objetoElegido.DB_NOMBRE == Museo.NOMBRE ||
+        widget.objetoElegido.DB_NOMBRE == Evento.NOMBRE ||
+        widget.objetoElegido.DB_NOMBRE == Archivo.NOMBRE) {
+      whereMunicipios = municipiosElegidos.length > 0
           ? "AND localidad IN ('${municipiosElegidos.join(',')}')"
           : "";
-    }else{
+    } else {
       whereMunicipios = municipiosElegidos.length > 0
           ? "AND municipio IN ('${municipiosElegidos.join(',')}')"
           : "";
@@ -609,18 +608,20 @@ class _FiltroInformacionState extends State<FiltroInformacion> {
                   ),
                 )
               : Container(),
-          SimpleAutoCompleteTextField(
-            decoration: new InputDecoration(
-              icon: Icon(Icons.filter_hdr),
-              hintText: "Provincia",
-            ),
-            suggestions: Constantes.provincias,
-            textSubmitted: (s) => setState(() {
-              if (s != "") {
-                provinciasElegidas.add(s);
-              }
-            }),
-          ),
+          widget.objetoElegido.DB_NOMBRE != Archivo.NOMBRE
+              ? SimpleAutoCompleteTextField(
+                  decoration: new InputDecoration(
+                    icon: Icon(Icons.filter_hdr),
+                    hintText: "Provincia",
+                  ),
+                  suggestions: Constantes.provincias,
+                  textSubmitted: (s) => setState(() {
+                    if (s != "") {
+                      provinciasElegidas.add(s);
+                    }
+                  }),
+                )
+              : Container(),
           provinciasElegidas.length > 0
               ? Container(
                   height: 40,
@@ -647,12 +648,13 @@ class _FiltroInformacionState extends State<FiltroInformacion> {
               : Container(),
           (
               widget.objetoElegido.DB_NOMBRE == ActividadTuristica.NOMBRE ||
-              widget.objetoElegido.DB_NOMBRE == Evento.NOMBRE ||
-              widget.objetoElegido.DB_NOMBRE == Guia.NOMBRE ||
-              widget.objetoElegido.DB_NOMBRE == Monumento.NOMBRE ||
-              widget.objetoElegido.DB_NOMBRE == Museo.NOMBRE ||
-              widget.objetoElegido.DB_NOMBRE == OficinaTurismo.NOMBRE ||
-              widget.objetoElegido.DB_NOMBRE == TurismoActivo.NOMBRE
+                  widget.objetoElegido.DB_NOMBRE == Evento.NOMBRE ||
+                  widget.objetoElegido.DB_NOMBRE == Guia.NOMBRE ||
+                  widget.objetoElegido.DB_NOMBRE == Monumento.NOMBRE ||
+                  widget.objetoElegido.DB_NOMBRE == Museo.NOMBRE ||
+                  widget.objetoElegido.DB_NOMBRE == OficinaTurismo.NOMBRE ||
+                  widget.objetoElegido.DB_NOMBRE == TurismoActivo.NOMBRE ||
+                  widget.objetoElegido.DB_NOMBRE == Archivo.NOMBRE
           ) ? Container() :
           Row(children: [
             Icon(IconsTurisCyL.wheelchair_accessibility, color: Colors.grey),

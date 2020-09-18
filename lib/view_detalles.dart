@@ -30,6 +30,7 @@ import 'package:turiscyl/db_handler.dart';
 import 'package:turiscyl/models/albergue.dart';
 import 'package:turiscyl/models/alojamiento_hotelero.dart';
 import 'package:turiscyl/models/apartamento.dart';
+import 'package:turiscyl/models/archivo.dart';
 import 'package:turiscyl/models/cafeteria.dart';
 import 'package:turiscyl/models/camping.dart';
 import 'package:turiscyl/models/evento.dart';
@@ -196,7 +197,10 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           title: Text(lista.nombre),
                                         ),
                                         onTap: (){
-                                          Utils().anadirElementoALista(lista.id, widget.elemento);
+                                          Toast.show(
+                                              "Añadido a la lista", context);
+                                          Utils().anadirElementoALista(
+                                              lista.id, widget.elemento);
                                           Navigator.pop(context);
                                         },
                                       );
@@ -242,6 +246,8 @@ class _VistaDetallesState extends State<VistaDetalles> {
         return _monumento();
       case Museo.NOMBRE:
         return _museo();
+      case Archivo.NOMBRE:
+        return _archivo();
       case Evento.NOMBRE:
         return _evento();
       case ActividadTuristica.NOMBRE:
@@ -5515,6 +5521,211 @@ class _VistaDetallesState extends State<VistaDetalles> {
     );
   }
 
+  Widget _archivo() {
+    return Column(
+      children: [
+        Expanded(
+            flex: 4,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: SingleChildScrollView(
+                child: Column(children: [
+                  Container(
+                    child: new Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: new Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 13),
+                                child: new Container(
+                                  child: Center(
+                                    child: Column(
+                                      children: [
+                                        Text("Accesibilidad PMR",
+                                            style: TextStyle(
+                                                color: Colores().dark,
+                                                fontWeight: FontWeight.bold)),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Icon(
+                                                IconsTurisCyL
+                                                    .wheelchair_accessibility,
+                                                color: Colores().dark),
+                                            Flexible(
+                                              child: Text(
+                                                widget.elemento.accesibilidad,
+                                                style: TextStyle(
+                                                  color: Colores().dark,
+                                                ),
+                                                overflow: TextOverflow.clip,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 13),
+                                child: new Container(
+                                  child: Center(
+                                    child: Column(
+                                      children: [
+                                        Text("Localidad",
+                                            style: TextStyle(
+                                                color: Colores().dark,
+                                                fontWeight: FontWeight.bold)),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Icon(Icons.location_city,
+                                                color: Colores().dark),
+                                            Flexible(
+                                              child: Text(
+                                                widget.elemento.localidad,
+                                                style: TextStyle(
+                                                  color: Colores().dark,
+                                                ),
+                                                overflow: TextOverflow.clip,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: new Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 13),
+                                child: new Container(
+                                  child: Center(
+                                    child: Column(
+                                      children: [
+                                        Text("Código",
+                                            style: TextStyle(
+                                                color: Colores().dark,
+                                                fontWeight: FontWeight.bold)),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Icon(IconsTurisCyL.barcode,
+                                                color: Colores().dark),
+                                            Flexible(
+                                              child: Text(
+                                                widget.elemento.codigo,
+                                                style: TextStyle(
+                                                  color: Colores().dark,
+                                                ),
+                                                overflow: TextOverflow.clip,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 13),
+                                child: new Container(
+                                  child: Center(
+                                    child: Column(
+                                      children: [
+                                        Text("Tipo",
+                                            style: TextStyle(
+                                                color: Colores().dark,
+                                                fontWeight: FontWeight.bold)),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Icon(IconsTurisCyL.shape,
+                                                color: Colores().dark),
+                                            Flexible(
+                                              child: Text(
+                                                widget.elemento.tipo,
+                                                style: TextStyle(
+                                                  color: Colores().dark,
+                                                ),
+                                                overflow: TextOverflow.clip,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Text("Horario de apertura",
+                      style: TextStyle(
+                          color: Colores().dark, fontWeight: FontWeight.bold)),
+                  widget.elemento.horario != ''
+                      ? Html(data: widget.elemento.horario)
+                      : Text("No disponible"),
+                  Text("Servicios disponibles",
+                      style: TextStyle(
+                          color: Colores().dark, fontWeight: FontWeight.bold)),
+                  widget.elemento.servicios != ''
+                      ? Html(data: widget.elemento.servicios)
+                      : Text("No disponible"),
+                  Text("Requisitos específicos para el acceso",
+                      style: TextStyle(
+                          color: Colores().dark, fontWeight: FontWeight.bold)),
+                  widget.elemento.horario != ''
+                      ? Text(widget.elemento.requisitos)
+                      : Text("No disponible"),
+                  Text("Información adicional",
+                      style: TextStyle(
+                          color: Colores().dark, fontWeight: FontWeight.bold)),
+                  widget.elemento.informacion != ''
+                      ? Html(data: widget.elemento.informacion)
+                      : Text("No disponible"),
+                  Text("Enlace al contenido",
+                      style: TextStyle(
+                          color: Colores().dark, fontWeight: FontWeight.bold)),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12.0),
+                    child: InkWell(
+                      child: Text(widget.elemento.enlaceContenido,
+                          style: TextStyle(
+                              color: Colores().light,
+                              fontWeight: FontWeight.bold)),
+                      onTap: () {
+                        Utils().openUrl(widget.elemento.enlaceContenido);
+                      },
+                    ),
+                  ),
+                ]),
+              ),
+            )),
+      ],
+    );
+  }
+
   Widget _evento() {
     return Column(
       children: [
@@ -7120,12 +7331,14 @@ class _VistaDetallesState extends State<VistaDetalles> {
               "https://www.google.com/maps/search/?api=1&query=${widget.elemento.posicion.latitude}, ${widget.elemento.posicion.longitude}");
         break;
       case 'Cómo llegar':
-        if(widget.elemento.posicion.latitude == -1)
+        if (widget.elemento.posicion.latitude == -1)
           Utils().openUrl(
-            "http://maps.google.com/maps?daddr=${widget.elemento.nombre}+${widget.elemento.provincia}");
+              "http://maps.google.com/maps?daddr=${widget.elemento
+                  .nombre}+${widget.elemento.provincia}");
         else
           Utils().openUrl(
-              "http://maps.google.com/maps?daddr=${widget.elemento.posicion.latitude}, ${widget.elemento.posicion.longitude}");;
+              "http://maps.google.com/maps?daddr=${widget.elemento.posicion
+                  .latitude}, ${widget.elemento.posicion.longitude}");
         break;
       case 'Compartir':
         Share.share(

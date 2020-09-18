@@ -157,8 +157,7 @@ class Monumento {
   ListTile vistaInformacion(){
     return ListTile(
       title: Text(nombre),
-      subtitle: Text(
-          "${tipoConstruccion} · ${municipio}, ${provincia}"),
+      subtitle: Text("${clasificacion} · ${municipio}, ${provincia}"),
     );
   }
 

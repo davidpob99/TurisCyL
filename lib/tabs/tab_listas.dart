@@ -18,7 +18,6 @@
 import 'package:flutter/material.dart';
 import 'package:turiscyl/models/lista.dart';
 import 'package:turiscyl/utils.dart';
-import 'package:turiscyl/values/strings.dart';
 import 'package:turiscyl/view_lista.dart';
 
 class TabListas extends StatefulWidget {
@@ -39,35 +38,54 @@ class _TabListasState extends State<TabListas> {
     return FutureBuilder(
       future: Utils().obtenerListasGuardadas(),
       builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-        if(snapshot.hasData){
-          return ListView.builder(
-              shrinkWrap: true,
-              physics: ClampingScrollPhysics(),
-              padding: const EdgeInsets.all(8),
-              itemCount: snapshot.data.length,
-              itemBuilder: (BuildContext context, int index) {
-                final Lista lista = Lista.fromMap(snapshot.data[index]);
-                return Card(
-                  child: InkWell(
-                    splashColor: Colors.orange,
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => VistaLista(
-                              lista: lista,
-                            ),
-                          ));
-                    },
-                    child: ListTile(
-                      title: Text('${lista.nombre}'),
-                      subtitle: Text(
-                          '${lista.provincias.toList().join(", ")} · ${lista.dias} días'),
+        if(snapshot.hasData) {
+            if (snapshot.data.length > 0) {
+              return ListView.builder(
+                  shrinkWrap: true,
+                  physics: ClampingScrollPhysics(),
+                  padding: const EdgeInsets.all(8),
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final Lista lista = Lista.fromMap(snapshot.data[index]);
+                    return Card(
+                      child: InkWell(
+                        splashColor: Colors.orange,
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => VistaLista(
+                                  lista: lista,
+                                ),
+                              ));
+                        },
+                        child: ListTile(
+                          title: Text('${lista.nombre}'),
+                          subtitle: Text(
+                              '${lista.provincias.toList().join(", ")} · ${lista.dias == -1 ? 'N/A' : lista.dias.toString()} días'),
+                        ),
+                      ),
+                    );
+                  });
+            } else {
+              return Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Center(
+                    child: Column(
+                  children: [
+                    Icon(
+                      Icons.add,
+                      color: Colors.grey,
                     ),
-                  ),
-                );
-              });
-        } else if (snapshot.hasError){
+                    Text(
+                      "Añada su primera lista pulsando el botón inferior derecho",
+                      style: TextStyle(color: Colors.grey),
+                    )
+                  ],
+                )),
+              );
+            }
+          } else if (snapshot.hasError){
           return Text(snapshot.error);
         } else {
           return Utils().cargandoDatos();

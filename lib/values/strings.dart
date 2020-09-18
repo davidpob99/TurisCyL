@@ -21,7 +21,8 @@ class Strings {
   static const String explorar = "Explorar";
   static const String listas = "Listas";
   static const String nombreDb = "TurisCyL.db";
-  static const String descripcion = "Descubre dónde dormir, dónde comer, qué visitar y qué hacer en Castilla y León";
+  static const String descripcion =
+      "Descubre dónde dormir, dónde comer, qué visitar y qué hacer en Castilla y León";
   static const String copyright = "Copyright © 2020 David Población Criado";
   static const String gnu3Corto = """
 Este programa es software libre: puede redistribuirlo y/o modificarlo bajo los términos de la Licencia General Pública de GNU publicada por la Free Software Foundation, ya sea la versión 3 de la Licencia, o (a su elección) cualquier versión posterior.
@@ -30,6 +31,37 @@ Este programa se distribuye con la esperanza de que sea útil pero SIN NINGUNA G
 
 Usted ha debido de recibir una copia de la Licencia General Pública de GNU junto con este programa. Si no, vea http://www.gnu.org/licenses/.""";
 
+  static const String creditosImagenes = """
+  <p>Todas las fotografías usadas tienen licencia Creative Commons o ninguna licencia (Unsplash):</p>
+  <br>
+<p>Bar: <span>Photo by <a href="https://unsplash.com/@fabienmaurin?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Fabien Maurin</a> on <a href="https://unsplash.com/s/photos/bar-terrace?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></p>
+<p>Cafetería: <span>Photo by <a href="https://unsplash.com/@mparzuchowski?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Michał Parzuchowski</a> on <a href="https://unsplash.com/?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></p>
+<p>Restaurante: <span>Photo by <a href="https://unsplash.com/@ninjason?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Jason Leung</a> on <a href="https://unsplash.com/?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></p>
+<p>Salón de banquetes: <span>Photo by <a href="https://unsplash.com/@kaziiparkour?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Zakaria Zayane</a> on <a href="https://unsplash.com/@kaziiparkour?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></p>
+
+<p>Albergue: <span>Photo by <a href="https://unsplash.com/@marcusloke?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Marcus Loke</a> on <a href="https://unsplash.com/s/photos/hostel?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></p>
+<p>Hotel: <span>Photo by <a href="https://unsplash.com/@martenbjork?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Marten Bjork</a> on <a href="https://unsplash.com/?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></p>
+<p>Apartamento: <span>Photo by <a href="https://unsplash.com/@paralitik?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Brandon Griggs</a> on <a href="https://unsplash.com/s/photos/apartment?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></p>
+<p>Camping: <span>Photo by <a href="https://unsplash.com/@tlisbin?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Tommy Lisbin</a> on <a href="https://unsplash.com/s/photos/camping?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></p>
+<p>Turismo Rural: <span>Photo by <a href="https://unsplash.com/@henarlanga?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Henar Langa</a> on <a href="https://unsplash.com/s/photos/castilla?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></p>
+<p>Vivienda: <span>Photo by <a href="https://unsplash.com/@joakimaglo?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Joakim Aglo</a> on <a href="https://unsplash.com/s/photos/house-spain?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></p>
+
+<p>Monumentos: Fotografía por David Población</p>
+<p>Museos: Fotografía por Raúl Villalón en https://flic.kr/p/Gj5E5s</p>
+<p>Archivos: Fotografía por David Población</p>
+
+<p>Evento: Fotografía por Santiago López Pastor en https://flic.kr/p/HaWGnk</p>
+<p>Actividad Turística: <span>Photo by <a href="https://unsplash.com/@zubearasyraf?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Zubair Asyraf</a> on <a href="https://unsplash.com/s/photos/turistic-activity?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></p>
+<p>Guía: <span>Photo by <a href="https://unsplash.com/@capturethemoment?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Janis Oppliger</a> on <a href="https://unsplash.com/s/photos/tour?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></p>
+<p>Turismo Activo: <span>Photo by <a href="https://unsplash.com/@ihsanus?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">ihsan ulusoy</a> on <a href="https://unsplash.com/s/photos/treking?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></p>
+
+<p>Dónde comer: <span>Photo by <a href="https://unsplash.com/@vishkatti?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Vishwas Katti</a> on <a href="https://unsplash.com/?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></p>
+<p>Dónde dormir: <span>Photo by <a href="https://unsplash.com/@chris_jolly?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Christopher Jolly</a> on <a href="https://unsplash.com/s/photos/bed?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></p>
+<p>Qué ver: Fotografía por Joan en https://flic.kr/p/L9XPRm</p>
+<p>Qué hacer: <span>Photo by <a href="https://unsplash.com/@icehoundphotography?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">David Murray Chambers</a> on <a href="https://unsplash.com/s/photos/canoe?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></p>
+<p>Oficinas de turismo: Fotografía por Jesús Pérez Pacheco en https://flic.kr/p/9g3rHe</p>
+<p>Espacios Naturales: Fotografía por willi_bremen en https://flic.kr/p/WpdYfJ</p>
+  """;
   static const String htmlAyuda = """
   <h3>Pestaña explorar</h3>
   <p>Es la pestaña principal de la aplicación, donde se muestran las diferentes categorías para acceder a los lugares de interés turístico. Las categorías son:</p>
@@ -54,6 +86,9 @@ Usted ha debido de recibir una copia de la Licencia General Pública de GNU junt
   {"id":"e69781ac-f8c9-4e1b-87e5-4e4e43364c88","publicada":false,"timestamp":"2020-09-11T15:21:54.475567","nombre":"Hola mundo","descripcion":"Esto es una lista de prueba :)","autor":"Anónimo","dias":-1,"provincias":"[]","elementos":"[]"}
   </code>
   <p>Para añadirla basta con pegar dicho código en el cuadro de texto que se abre</p>
+  <h4>Listas públicas</h4>
+  <p>Las listas públicas son aquellas creadas por otros usuarios y que han sido verificadas para su uso público.</p>
+  <p>Puedes colaborar haciendo listas públicas y mandándolas a través <a href='https://forms.gle/Nooaur7qnskr8PaeA'>de este formulario</a></p>
   """;
   static const String politicaPrivacidad = """
   <p>Los datos que se introduzcan en la aplicación, así como la creación de listas NO se envían a ningún servidor y se guardan únicamente en el dispositivo del usuario.</p>
@@ -82,10 +117,11 @@ Usted ha debido de recibir una copia de la Licencia General Pública de GNU junt
     <li>Registro de establecimientos de turismo activo</li>
     <li>Registro de establecimientos de turismo rural</li>
     <li>Registro de viviendas de uso turístico</li>
+    <li>Directorio de Archivos de Castilla y León</li>
   </ul> 
   
   <p>Los mapas usados en la aplicación se obtienen de <a href='https://www.openstreetmap.org/'>OpenStreetMap</a></p>
-  <p>Las fotografías se obtienen a través de <a href='https://foursquare.com/'>Foursquare</a></p>
+  <p>Las fotografías de los lugares concretos se obtienen a través de <a href='https://foursquare.com/'>Foursquare</a></p>
   
   """;
   static const String htmlGpl3 = """
@@ -893,6 +929,35 @@ SOFTWARE.</p>
 <p>Copyright (c) 2020, the flutter_map authors
 Copyright (c) 2010-2019, Vladimir Agafonkin
 Copyright (c) 2010-2011, CloudMade
+All rights reserved.</p>
+<p>Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:</p>
+<ul>
+<li><p>Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.</p>
+</li>
+<li><p>Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.</p>
+</li>
+<li><p>Neither the name of the copyright holder nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.</p>
+</li>
+</ul>
+<p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
+
+<h3>flutter_map_marker_popup</h3>
+<p>Copyright (c) 2020, Rory Stephenson
 All rights reserved.</p>
 <p>Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:</p>

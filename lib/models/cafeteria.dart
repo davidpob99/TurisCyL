@@ -194,8 +194,7 @@ class Cafeteria {
   ListTile vistaInformacion(){
     return ListTile(
       title: Text(nombre),
-      subtitle: Text(
-          "${tipo}-${categoria} · ${municipio}, ${provincia}"),
+      subtitle: Text("${tipo} - ${categoria} · ${municipio}, ${provincia}"),
     );
   }
 

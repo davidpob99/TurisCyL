@@ -17,6 +17,7 @@
 
 import 'dart:convert';
 
+import 'package:turiscyl/models/archivo.dart';
 import 'package:turiscyl/models/evento.dart';
 import 'package:turiscyl/models/restaurante.dart';
 import 'package:turiscyl/models/salon_banquetes.dart';
@@ -98,6 +99,8 @@ class Lista {
         return Monumento.fromMap(map);
       case Museo.NOMBRE:
         return Museo.fromMap(map);
+      case Archivo.NOMBRE:
+        return Archivo.fromMap(map);
       case Evento.NOMBRE:
         return Evento.fromMap(map);
       case ActividadTuristica.NOMBRE:
@@ -129,9 +132,10 @@ class Lista {
     };
 
   void anadirElemento(var elemento){
-    if(elementos.contains(elemento))
+    if (elementos.contains(elemento))
       throw new Exception("Elemento ya en la lista ${this.nombre}");
-    _provincias.add(elemento.provincia);
+    if (elemento.DB_NOMBRE != Archivo.NOMBRE)
+      _provincias.add(elemento.provincia);
     _elementos.add(elemento);
   }
 

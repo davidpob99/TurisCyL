@@ -39,7 +39,7 @@ class VistaAcercaDe extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  "Versión 0.1.1",
+                  "Versión 0.2.0",
                   style: TextStyle(color: Colors.grey),
                 ),
               ),
@@ -145,7 +145,34 @@ class VistaAcercaDe extends StatelessWidget {
                       child: Icon(MaterialDesignIcons.description,
                           color: Colores().dark),
                     ),
-                    Text("Bibliotecas de código abierto", style: TextStyle(color: Colores().dark),)
+                    Text(
+                      "Bibliotecas de código abierto",
+                      style: TextStyle(color: Colores().dark),
+                    )
+                  ],
+                ),
+              ),
+              FlatButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => VistaHtml(
+                          titulo: "Créditos de las fotografías",
+                          html: Strings.creditosImagenes,
+                        ),
+                      ));
+                },
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Icon(Icons.photo, color: Colores().dark),
+                    ),
+                    Text(
+                      "Créditos de las fotografías",
+                      style: TextStyle(color: Colores().dark),
+                    )
                   ],
                 ),
               ),
@@ -157,10 +184,12 @@ class VistaAcercaDe extends StatelessWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
-                      child: Icon(IconsTurisCyL.github,
-                          color: Colores().dark),
+                      child: Icon(IconsTurisCyL.github, color: Colores().dark),
                     ),
-                    Text("Ver en GitHub", style: TextStyle(color: Colores().dark),)
+                    Text(
+                      "Ver en GitHub",
+                      style: TextStyle(color: Colores().dark),
+                    )
                   ],
                 ),
               )

@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:toast/toast.dart';
 import 'package:turiscyl/crear_lista.dart';
+import 'package:turiscyl/material_design_icons.dart';
 import 'package:turiscyl/tabs/tab_explorar.dart';
 import 'package:turiscyl/tabs/tab_listas.dart';
 import 'package:turiscyl/utils.dart';
@@ -27,6 +28,7 @@ import 'package:turiscyl/values/strings.dart';
 import 'package:turiscyl/view_about.dart';
 import 'package:turiscyl/view_html.dart';
 import 'package:turiscyl/view_importar.dart';
+import 'package:turiscyl/view_listas_publicas.dart';
 
 import 'models/evento.dart';
 
@@ -163,24 +165,31 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Icon(Icons.add),
           children: [
             SpeedDialChild(
-              child: Icon(Icons.file_download),
-              backgroundColor: Colores().primario,
-              label: "Importar",
-              onTap: (){
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => VistaImportar()));
-
-              }
-            ),
-            SpeedDialChild(
-              child: Icon(Icons.playlist_add),
+                child: Icon(Icons.file_download),
                 backgroundColor: Colores().primario,
-              label: "Nueva lista",
-              onTap: (){
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CrearLista()));
-              }
-            )
+                label: "Importar",
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => VistaImportar()));
+                }),
+            SpeedDialChild(
+                child: Icon(MaterialDesignIcons.people),
+                backgroundColor: Colores().primario,
+                label: "Públicas",
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => VistaListasPublicas()));
+                }),
+            SpeedDialChild(
+                child: Icon(Icons.playlist_add),
+                backgroundColor: Colores().primario,
+                label: "Nueva lista",
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => CrearLista()));
+                })
           ],
         );
     }

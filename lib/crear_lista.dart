@@ -33,76 +33,74 @@ class _CrearListaState extends State<CrearLista> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: Text("Crear lista")
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Form(
-            key: _formKey,
-            child: Column(
-                children: <Widget>[
-                  TextFormField(
-                    decoration: InputDecoration(
-                      hintText: "Nombre",
-                      icon: Icon(Icons.title),
-                      contentPadding: new EdgeInsets.all(8.0),
-                    ),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Introduzca el nombre de la lista';
-                      }
-                    },
-                    onSaved: (val) => setState(() => _lista.nombre = val),
+      appBar: AppBar(title: Text("Crear lista")),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Form(
+              key: _formKey,
+              child: Column(children: <Widget>[
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: "Nombre",
+                    icon: Icon(Icons.title),
+                    contentPadding: new EdgeInsets.all(8.0),
                   ),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      hintText: "Autor",
-                      icon: Icon(Icons.person),
-                      contentPadding: new EdgeInsets.all(8.0),
-                    ),
-                    onSaved: (val){
-                      setState(() {
-                        if(val == '')
-                          _lista.autor = "Anónimo";
-                        else
-                          _lista.autor = val;
-                      });
-                    },
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Introduzca el nombre de la lista';
+                    }
+                  },
+                  onSaved: (val) => setState(() => _lista.nombre = val),
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: "Autor",
+                    icon: Icon(Icons.person),
+                    contentPadding: new EdgeInsets.all(8.0),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Si no introduce el nombre del autor figurará como 'Anónimo'",
-                    style: TextStyle(
-                      color: Colors.grey
-                    ),),
+                  onSaved: (val) {
+                    setState(() {
+                      if (val == '')
+                        _lista.autor = "Anónimo";
+                      else
+                        _lista.autor = val;
+                    });
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Si no introduce el nombre del autor figurará como 'Anónimo'",
+                    style: TextStyle(color: Colors.grey),
                   ),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      hintText: "Descripción",
-                      icon: Icon(Icons.short_text),
-                      contentPadding: new EdgeInsets.all(8.0),
-                    ),
-                    onSaved: (val) => setState(() => _lista.descripcion = val),
+                ),
+                TextFormField(
+                  keyboardType: TextInputType.multiline,
+                  minLines: 1,
+                  maxLines: 10000000,
+                  decoration: InputDecoration(
+                    hintText: "Descripción",
+                    icon: Icon(Icons.short_text),
+                    contentPadding: new EdgeInsets.all(8.0),
                   ),
-                  TextFormField(
-                    decoration: InputDecoration(
+                  onSaved: (val) => setState(() => _lista.descripcion = val),
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
                       hintText: "Número de días",
                       icon: Icon(Icons.today),
-                      contentPadding: new EdgeInsets.all(8.0)
-                    ),
-                    keyboardType: TextInputType.number,
-                    onSaved: (val) {
-                      try{
-                        _lista.dias = int.parse(val);
-                      } catch(e){
-                        _lista.dias = -1;
-                      }
-
-                    },
-                  ),
-                ]
-            )
+                      contentPadding: new EdgeInsets.all(8.0)),
+                  keyboardType: TextInputType.number,
+                  onSaved: (val) {
+                    try {
+                      _lista.dias = int.parse(val);
+                    } catch (e) {
+                      _lista.dias = -1;
+                    }
+                  },
+                ),
+              ])),
         ),
       ),
       floatingActionButton: FloatingActionButton(

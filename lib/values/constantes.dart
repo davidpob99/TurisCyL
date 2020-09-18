@@ -19,6 +19,7 @@ import 'package:turiscyl/models/actividad_turistica.dart';
 import 'package:turiscyl/models/albergue.dart';
 import 'package:turiscyl/models/alojamiento_hotelero.dart';
 import 'package:turiscyl/models/apartamento.dart';
+import 'package:turiscyl/models/archivo.dart';
 import 'package:turiscyl/models/bar.dart';
 import 'package:turiscyl/models/cafeteria.dart';
 import 'package:turiscyl/models/camping.dart';
@@ -36,6 +37,8 @@ class Constantes{
   static const primeraEjecucion = "primera_ejecucion";
   static const listas = "listas";
   static const crearSharedPreferences = "[]";
+  static const urlListasPublicas =
+      "https://api.jsonbin.io/b/5f63489a65b18913fc4dd003/latest";
 
   static const List<String> categoriasComer = [
     Bar.NOMBRE,
@@ -54,7 +57,8 @@ class Constantes{
   ];
   static const List<String> categoriasVer = [
     Monumento.NOMBRE,
-    Museo.NOMBRE
+    Museo.NOMBRE,
+    Archivo.NOMBRE
   ];
 
   static const List<String> categoriasHacer = [
@@ -83,7 +87,8 @@ class Constantes{
 
   static const List<String> imagenesVer = [
     'assets/images/monumento.jpg',
-    'assets/images/museo.jpg'
+    'assets/images/museo.jpg',
+    'assets/images/archivo.jpg'
   ];
 
   static const List<String> imagenesHacer = [

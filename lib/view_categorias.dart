@@ -16,8 +16,9 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:turiscyl/values/strings.dart';
+import 'package:turiscyl/utils.dart';
 import 'package:turiscyl/values/constantes.dart';
+import 'package:turiscyl/values/strings.dart';
 import 'package:turiscyl/view_informacion.dart';
 
 class VistaCategorias extends StatelessWidget {
@@ -96,7 +97,9 @@ class VistaCategorias extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          _categoria[index],
+                          _categoria[index]
+                              .split(Utils().beforeCapitalLetter)
+                              .join(" "),
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold),
                         ),

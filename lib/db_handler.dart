@@ -21,6 +21,7 @@ import 'package:turiscyl/models/actividad_turistica.dart';
 import 'package:turiscyl/models/albergue.dart';
 import 'package:turiscyl/models/alojamiento_hotelero.dart';
 import 'package:turiscyl/models/apartamento.dart';
+import 'package:turiscyl/models/archivo.dart';
 import 'package:turiscyl/models/cafeteria.dart';
 import 'package:turiscyl/models/camping.dart';
 import 'package:turiscyl/models/evento.dart';
@@ -106,18 +107,22 @@ class DbHandler {
             batch.insert(objeto.DB_NOMBRE, Vivienda.fromCsv(datos[i]).toMap());
             break;
           case Monumento.NOMBRE:
-            batch.insert(objeto.DB_NOMBRE, Monumento.fromJson(datos[i]).toMap());
+            batch.insert(
+                objeto.DB_NOMBRE, Monumento.fromJson(datos[i]).toMap());
             break;
           case Museo.NOMBRE:
-            if(i == 1)
-              break;
+            if (i == 1) break;
             batch.insert(objeto.DB_NOMBRE, Museo.fromCsv(datos[i]).toMap());
+            break;
+          case Archivo.NOMBRE:
+            batch.insert(objeto.DB_NOMBRE, Archivo.fromCsv(datos[i]).toMap());
             break;
           case Evento.NOMBRE:
             batch.insert(objeto.DB_NOMBRE, Evento.fromCsv(datos[i]).toMap());
             break;
           case ActividadTuristica.NOMBRE:
-            batch.insert(objeto.DB_NOMBRE, ActividadTuristica.fromCsv(datos[i]).toMap());
+            batch.insert(
+                objeto.DB_NOMBRE, ActividadTuristica.fromCsv(datos[i]).toMap());
             break;
           case Guia.NOMBRE:
             batch.insert(objeto.DB_NOMBRE, Guia.fromCsv(datos[i]).toMap());
