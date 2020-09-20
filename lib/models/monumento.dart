@@ -1,24 +1,25 @@
 /*
- * Copyright (C) 2020  David Población Criado
+ * TurisCyL: Planifica tu viaje por Castilla y León
+ * Copyright (C) 2020 David Población Criado
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 import 'package:flutter/material.dart';
 import 'package:latlong/latlong.dart';
 
-/// https://datosabiertos.jcyl.es/web/jcyl/binarios/70/494/monumentos.xsd?blobheader=text%2Fxml%3Bcharset%3DUTF-8&blobheadername1=Cache-Control&blobheadername2=Expires&blobheadername3=Site&blobheadervalue1=no-store%2Cno-cache%2Cmust-revalidate&blobheadervalue2=0&blobheadervalue3=Portal_RISP&blobnocache=true
+/// Representación de un monumento
 class Monumento {
   static const String JSON = "https://datosabiertos.jcyl.es/web/jcyl/risp/es/cultura-ocio/monumentos/1284325843131.json";
   static const String NOMBRE = "Monumentos";

@@ -1,18 +1,19 @@
 /*
- * Copyright (C) 2020  David Población Criado
+ * TurisCyL: Planifica tu viaje por Castilla y León
+ * Copyright (C) 2020 David Población Criado
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 import 'dart:convert';
@@ -37,9 +38,9 @@ import 'monumento.dart';
 import 'museo.dart';
 import 'oficina_turismo.dart';
 
-/// Representación de una lista de objetos de turismo. Estos elementos pueden
-/// ser de cualquiera de las clases definidas a partir de los datos de la JCyL
-/// excepto de [Evento]
+/// Representación de una lista de objetos de turismo. Los elementos que la
+/// conforman pueden ser de cualquiera de las clases definidas a partir de los
+/// datos de la JCyL excepto de [Evento]
 class Lista {
   String _id;
   bool _publicada;
@@ -50,7 +51,7 @@ class Lista {
   int _dias;
   Set _provincias;
   List _elementos;
-  
+
   Lista(){
     this._provincias = new Set<String>();
     this._elementos = new List();

@@ -1,18 +1,19 @@
 /*
- * Copyright (C) 2020  David Población Criado
+ * TurisCyL: Planifica tu viaje por Castilla y León
+ * Copyright (C) 2020 David Población Criado
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 import 'package:turiscyl/models/actividad_turistica.dart';
@@ -33,10 +34,12 @@ import 'package:turiscyl/models/turismo_activo.dart';
 import 'package:turiscyl/models/turismo_rural.dart';
 import 'package:turiscyl/models/vivienda.dart';
 
+/// Define las constantes de la aplicación
 class Constantes{
   static const primeraEjecucion = "primera_ejecucion";
   static const listas = "listas";
   static const crearSharedPreferences = "[]";
+  static const urlGithub = "https://github.com/davidpob99/TurisCyL";
   static const urlListasPublicas =
       "https://api.jsonbin.io/b/5f63489a65b18913fc4dd003/latest";
 

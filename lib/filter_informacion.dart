@@ -1,18 +1,19 @@
 /*
- * Copyright (C) 2020  David Población Criado
+ * TurisCyL: Planifica tu viaje por Castilla y León
+ * Copyright (C) 2020 David Población Criado
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
@@ -33,6 +34,7 @@ import 'package:turiscyl/models/turismo_activo.dart';
 import 'package:turiscyl/models/turismo_rural.dart';
 import 'package:turiscyl/models/vivienda.dart';
 import 'package:turiscyl/values/constantes.dart';
+import 'package:turiscyl/values/strings.dart';
 import 'package:turiscyl/view_informacion.dart';
 
 import 'models/actividad_turistica.dart';
@@ -40,6 +42,11 @@ import 'models/archivo.dart';
 import 'models/evento.dart';
 import 'models/monumento.dart';
 
+/// En cada una de las subcategorías (bares, monumentos...) permite filtrar por
+/// sus atributos, siendo estos diferentes para cada una de las subcategorías
+/// Atributos:
+/// * [objetoElegido]: es necesario especificarlo para generar y adaptar el
+/// filtro a dicha subcategoría
 class FiltroInformacion extends StatefulWidget {
   final objetoElegido;
 
@@ -139,17 +146,18 @@ class _FiltroInformacionState extends State<FiltroInformacion> {
     ''';
   }
 
+  /// Hace una consulta a la BD para saber cuales son las posibles sugerencias
+  /// para cada uno de los filtros
   Future<void> _cargarFiltrosDb() async {
     // CATEGORÍAS
-    if(
-      widget.objetoElegido.DB_NOMBRE == Cafeteria.NOMBRE ||
-      widget.objetoElegido.DB_NOMBRE == Restaurante.NOMBRE ||
-      widget.objetoElegido.DB_NOMBRE == SalonBanquetes.NOMBRE ||
-      widget.objetoElegido.DB_NOMBRE == AlojamientoHotelero.NOMBRE ||
-          widget.objetoElegido.DB_NOMBRE == Apartamento.NOMBRE ||
-          widget.objetoElegido.DB_NOMBRE == Camping.NOMBRE ||
-          widget.objetoElegido.DB_NOMBRE == TurismoRural.NOMBRE ||
-          widget.objetoElegido.DB_NOMBRE == Evento.NOMBRE
+    if (widget.objetoElegido.DB_NOMBRE == Cafeteria.NOMBRE ||
+        widget.objetoElegido.DB_NOMBRE == Restaurante.NOMBRE ||
+        widget.objetoElegido.DB_NOMBRE == SalonBanquetes.NOMBRE ||
+        widget.objetoElegido.DB_NOMBRE == AlojamientoHotelero.NOMBRE ||
+        widget.objetoElegido.DB_NOMBRE == Apartamento.NOMBRE ||
+        widget.objetoElegido.DB_NOMBRE == Camping.NOMBRE ||
+        widget.objetoElegido.DB_NOMBRE == TurismoRural.NOMBRE ||
+        widget.objetoElegido.DB_NOMBRE == Evento.NOMBRE
     ){
       final String sql = '''
     SELECT DISTINCT categoria
@@ -247,13 +255,14 @@ class _FiltroInformacionState extends State<FiltroInformacion> {
 
   }
 
+  /// Genera el filtro para la categoría
   Widget _categoria() {
     return Column(
       children: [
         SimpleAutoCompleteTextField(
           decoration: new InputDecoration(
             icon: Icon(Icons.star),
-            hintText: "Categoría",
+            hintText: Strings.categoria,
           ),
           suggestions: categorias,
           textSubmitted: (s) => setState(() {
@@ -265,7 +274,7 @@ class _FiltroInformacionState extends State<FiltroInformacion> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            "Categorías disponibles: ${categorias.join(' - ')}",
+            "${Strings.categoriasDisponibles}: ${categorias.join(' - ')}",
             style: TextStyle(
               color: Colors.grey,
               fontSize: 14,
@@ -300,13 +309,14 @@ class _FiltroInformacionState extends State<FiltroInformacion> {
     );
   }
 
+  /// Genera el filtro para el tipo
   Widget _tipo() {
     return Column(
       children: [
         SimpleAutoCompleteTextField(
           decoration: new InputDecoration(
             icon: Icon(IconsTurisCyL.shape),
-            hintText: "Tipo",
+            hintText: Strings.tipo,
           ),
           suggestions: tipos,
           textSubmitted: (s) => setState(() {
@@ -318,10 +328,10 @@ class _FiltroInformacionState extends State<FiltroInformacion> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-              "Tipos disponibles: ${tipos.join(' - ')}",
+            "${Strings.tiposDisponibles}: ${tipos.join(' - ')}",
             style: TextStyle(
-                color: Colors.grey,
-                fontSize: 14,
+              color: Colors.grey,
+              fontSize: 14,
             ),
           ),
         ),
@@ -353,13 +363,14 @@ class _FiltroInformacionState extends State<FiltroInformacion> {
     );
   }
 
+  /// Genera el filtro para el tipo de construcción (solo en [Monumento])
   Widget _tipoConstruccion() {
     return Column(
       children: [
         SimpleAutoCompleteTextField(
           decoration: new InputDecoration(
             icon: Icon(IconsTurisCyL.bank),
-            hintText: "Tipo construcción",
+            hintText: Strings.tipoConstruccion,
           ),
           suggestions: tiposConstruccion,
           textSubmitted: (s) => setState(() {
@@ -371,7 +382,7 @@ class _FiltroInformacionState extends State<FiltroInformacion> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            "Tipos disponibles: ${tiposConstruccion.join(' - ')}",
+            "${Strings.tiposDisponibles}: ${tiposConstruccion.join(' - ')}",
             style: TextStyle(
               color: Colors.grey,
               fontSize: 14,
@@ -406,13 +417,14 @@ class _FiltroInformacionState extends State<FiltroInformacion> {
     );
   }
 
+  /// Genera el filtro para la clasificación
   Widget _clasificacion() {
     return Column(
       children: [
         SimpleAutoCompleteTextField(
           decoration: new InputDecoration(
             icon: Icon(IconsTurisCyL.castle),
-            hintText: "Clasificación",
+            hintText: Strings.clasificacion,
           ),
           suggestions: clasificaciones,
           textSubmitted: (s) => setState(() {
@@ -424,7 +436,8 @@ class _FiltroInformacionState extends State<FiltroInformacion> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            "Clasificaciones disponibles: ${clasificaciones.join(' - ')}",
+            "${Strings.clasificacionesDisponibles}: ${clasificaciones.join(
+                ' - ')}",
             style: TextStyle(
               color: Colors.grey,
               fontSize: 14,
@@ -459,13 +472,14 @@ class _FiltroInformacionState extends State<FiltroInformacion> {
     );
   }
 
+  /// Genera el filtro para la temática (solo en [Evento])
   Widget _tematica() {
     return Column(
       children: [
         SimpleAutoCompleteTextField(
           decoration: new InputDecoration(
             icon: Icon(IconsTurisCyL.stadium_variant),
-            hintText: "Temática",
+            hintText: Strings.tematica,
           ),
           suggestions: tematicas,
           textSubmitted: (s) => setState(() {
@@ -477,7 +491,7 @@ class _FiltroInformacionState extends State<FiltroInformacion> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            "Temáticas disponibles: ${tematicas.join(' - ')}",
+            "${Strings.tematicasDisponibles}: ${tematicas.join(' - ')}",
             style: TextStyle(
               color: Colors.grey,
               fontSize: 14,
@@ -512,32 +526,34 @@ class _FiltroInformacionState extends State<FiltroInformacion> {
     );
   }
 
+  /// Decide los filtros que hay que usar dependiendo del [objetoElegido]
   Widget _decidirVista() {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Column(
         children: [
           Text(
-              "Añade un filtro para concretar las búsquedas. Recuerda que se tienen que cumplir todas las condiciones que introduzcas"),
+              Strings.infoFiltros),
           SimpleAutoCompleteTextField(
             decoration: new InputDecoration(
               icon: Icon(Icons.label),
-              hintText: "Nombre",
+              hintText: Strings.nombre,
             ),
             suggestions: [],
-            textSubmitted: (s) => setState(() {
-              if (nombresElegidos.length > 0) {
-                showDialog(
-                    context: context,
+            textSubmitted: (s) =>
+                setState(() {
+                  if (nombresElegidos.length > 0) {
+                    showDialog(
+                        context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        content: Text("Solo se puede buscar un nombre"),
+                        content: Text(Strings.buscarSolo1Nombre),
                         actions: [
                           new FlatButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: new Text("Ok"))
+                              child: new Text(Strings.ok))
                         ],
                       );
                     });
@@ -575,7 +591,7 @@ class _FiltroInformacionState extends State<FiltroInformacion> {
           widget.objetoElegido.DB_NOMBRE != Guia.NOMBRE ? SimpleAutoCompleteTextField(
             decoration: new InputDecoration(
               icon: Icon(Icons.location_city),
-              hintText: "Municipio",
+              hintText: Strings.municipio,
             ),
             suggestions: Constantes.municipios,
             textSubmitted: (s) => setState(() {
@@ -612,7 +628,7 @@ class _FiltroInformacionState extends State<FiltroInformacion> {
               ? SimpleAutoCompleteTextField(
                   decoration: new InputDecoration(
                     icon: Icon(Icons.filter_hdr),
-                    hintText: "Provincia",
+                    hintText: Strings.provincia,
                   ),
                   suggestions: Constantes.provincias,
                   textSubmitted: (s) => setState(() {
@@ -680,7 +696,7 @@ class _FiltroInformacionState extends State<FiltroInformacion> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Filtro")),
+      appBar: AppBar(title: Text(Strings.filtro)),
       body: SingleChildScrollView(child: _decidirVista()),
       floatingActionButton: new FloatingActionButton(
           child: Icon(Icons.search),
@@ -689,7 +705,8 @@ class _FiltroInformacionState extends State<FiltroInformacion> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => VistaInformacion(
+                    builder: (context) =>
+                        VistaInformacion(
                           categoriaElegida: widget.objetoElegido.DB_NOMBRE,
                           consulta: _generarConsulta(),
                         )));

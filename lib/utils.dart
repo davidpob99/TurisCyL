@@ -1,18 +1,19 @@
 /*
- * Copyright (C) 2020  David Población Criado
+ * TurisCyL: Planifica tu viaje por Castilla y León
+ * Copyright (C) 2020 David Población Criado
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 import 'dart:convert';
@@ -26,6 +27,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 import 'package:turiscyl/models/archivo.dart';
 import 'package:turiscyl/values/constantes.dart';
+import 'package:turiscyl/values/strings.dart';
 import 'package:turiscyl/view_bienvenida.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -50,6 +52,8 @@ import 'models/turismo_rural.dart';
 import 'models/venue.dart';
 import 'models/vivienda.dart';
 
+/// Diversos métodos de utilidades usadas por una o más vistas (sin contar los
+/// de la BD)
 class Utils {
   final RegExp beforeCapitalLetter = RegExp(r"(?=[A-Z])");
 
@@ -57,40 +61,47 @@ class Utils {
 
   DbHandler dbHandler = new DbHandler();
 
+  /// Comprobación de la conexión a internet.
+  /// Devuelve [true] si hay conexión o [false] si hay algún error. Además si
+  /// hay error muestra un [Toast] con una pequeña explicación del mismo
   Future<bool> hayInternet(BuildContext context) async {
     bool result = await DataConnectionChecker().hasConnection;
     if (result == true) {
       return true;
     } else {
       Toast.show(
-          "No hay conexión a Internet: ${DataConnectionChecker().lastTryResults}",
+          "${Strings.noInternet}: ${DataConnectionChecker().lastTryResults}",
           context);
       return false;
     }
   }
 
+  /// Comprueba si es la primera ejecución de la app
   Future<void> comprobarPrimeraEjecucion(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final bool noEsPrimera = prefs.containsKey(Constantes.primeraEjecucion);
-    if (!noEsPrimera)
-      _primeraEjecucion(context);
+    if (!noEsPrimera) _primeraEjecucion(context);
   }
 
-  void _primeraEjecucion(BuildContext context){
+  /// Encargado de realizar las tareas necesarias si es la primera ejecución de
+  /// la app, como generar las [SharedPreferences] o descargar los datos
+  void _primeraEjecucion(BuildContext context) {
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => VistaBienvenida()));
+        context, MaterialPageRoute(builder: (context) => VistaBienvenida()));
     _generarSharedPreferences();
     descargarDatos();
   }
 
+  /// Inicializa las [SharedPreferences], marcando que la primera ejecución ya
+  /// se ha producido y creando un almacén de listas según [Constantes.listas]
   Future<void> _generarSharedPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(Constantes.listas, Constantes.crearSharedPreferences);
     prefs.setBool(Constantes.primeraEjecucion, false); // da igual que valor sea
   }
 
+  /// Obtiene las listas almacenadas previamente en [SharedPreferences].
+  /// Devuelve una [List] de [Lista]
   Future<List> obtenerListasGuardadas() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final String sGuardado = await prefs.getString(Constantes.listas);
@@ -98,6 +109,7 @@ class Utils {
     return listaGuardada;
   }
 
+  /// Añade un [elemento] a una [Lista] dado su [id]
   Future<void> anadirElementoALista(String id, var elemento) async {
     final List datos = await obtenerListasGuardadas();
     List listas = new List<Lista>();
@@ -110,6 +122,7 @@ class Utils {
     guardarListas(listas);
   }
 
+  /// Elimina un [elemento] a una [Lista] dado su [id]
   Future<void> eliminarElementoDeLista(String id, var elemento) async {
     final List datos = await obtenerListasGuardadas();
     List listas = new List<Lista>();
@@ -122,12 +135,14 @@ class Utils {
     guardarListas(listas);
   }
 
+  /// Manda añadir una nueva [lista] a las listas de [SharedPreferences]
   Future<void> anadirLista(Lista lista) async {
     List guardados = await obtenerListasGuardadas();
     guardados.add(lista);
     guardarListas(guardados);
   }
 
+  /// Manda eliminar una nueva [lista] a las listas de [SharedPreferences]
   Future<void> eliminarLista(String id) async {
     List guardados = await obtenerListasGuardadas();
     for (int i = 0 ; i < guardados.length ; i++){
@@ -138,16 +153,18 @@ class Utils {
     guardarListas(guardados);
   }
 
+  /// Se encarga de guardar la [List] de [Lista] en las [SharedPreferences]
   Future<void> guardarListas(List list) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(Constantes.listas, jsonEncode(list));
   }
 
+  /// Coordina la descarga de los distintos conjuntos de datos
   void descargarDatos(){
     try {
       dbHandler.crearTabla(Venue.vacio());
     } catch (e) {
-      print("Tabla Venues ya creada");
+      print("Tabla ${Venue.NOMBRE} ya creada");
     }
     descargarCsv(Bar.vacio());
     descargarCsv(Cafeteria.vacio());
@@ -268,6 +285,8 @@ class Utils {
     await dbHandler.insertarDatos(datos, objeto);
   }
 
+  /// Apertura de una url en un navegador web.
+  /// Lanza una excepción si no puede realizar la acción
   Future<void> openUrl(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
@@ -276,7 +295,9 @@ class Utils {
     }
   }
 
-  Widget cargandoDatos(){
+  /// Widget para representar una descarga de datos en progreso. Consta de un
+  /// [CircularProgressIndicator] y un texto de información
+  Widget cargandoDatos() {
     return Container(
       padding: EdgeInsets.only(top: 50),
       height: 200,
@@ -285,7 +306,7 @@ class Utils {
           new Center(child: new CircularProgressIndicator()),
           Padding(
             padding: const EdgeInsets.all(10.0),
-            child: new Text("Cargando datos..."),
+            child: new Text(Strings.cargandoDatos),
           )
         ],
       ),

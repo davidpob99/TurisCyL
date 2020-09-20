@@ -1,18 +1,19 @@
 /*
- * Copyright (C) 2020  David Población Criado
+ * TurisCyL: Planifica tu viaje por Castilla y León
+ * Copyright (C) 2020 David Población Criado
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 import 'package:flutter/material.dart';
@@ -21,11 +22,17 @@ import 'package:turiscyl/values/constantes.dart';
 import 'package:turiscyl/values/strings.dart';
 import 'package:turiscyl/view_informacion.dart';
 
+/// Vista con la lista de subcategorías dada una [categoriaElegida]
+/// Argumentos:
+/// * [categoriaElegida]: una de las categorias (dormir, comer, ...) que se
+/// muestran en [TabExplorar]
 class VistaCategorias extends StatelessWidget {
   final int categoriaElegida;
 
   VistaCategorias({Key key, @required this.categoriaElegida}) : super(key: key);
 
+  /// Dependiendo la [categoriaElegida] devuelve la lista de nombres de las
+  /// subcategorías que corresponda
   List<String> _getListaDeCategorias() {
     switch (categoriaElegida) {
       case 0:
@@ -39,6 +46,8 @@ class VistaCategorias extends StatelessWidget {
     }
   }
 
+  /// Dependiendo la [categoriaElegida] devuelve la lista de imágenes de las
+  /// subcategorías que corresponda
   List<String> _getListaDeImagenes() {
     switch (categoriaElegida) {
       case 0:
@@ -52,6 +61,7 @@ class VistaCategorias extends StatelessWidget {
     }
   }
 
+  /// Dependiendo la [categoriaElegida] devuelve el título de la misma
   String _getTitulo() {
     switch (categoriaElegida) {
       case 0:
@@ -67,12 +77,12 @@ class VistaCategorias extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> _categoria = _getListaDeCategorias();
-    List<String> _imagenes = _getListaDeImagenes();
-    String _titulo = _getTitulo();
+    final List<String> _categoria = _getListaDeCategorias();
+    final List<String> _imagenes = _getListaDeImagenes();
+    final String _titulo = _getTitulo();
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_titulo)),
+      appBar: AppBar(title: Text(_titulo)),
       body: ListView.builder(
           shrinkWrap: true,
           physics: ClampingScrollPhysics(),

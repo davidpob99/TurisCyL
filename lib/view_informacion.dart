@@ -1,18 +1,19 @@
 /*
- * Copyright (C) 2020  David Población Criado
+ * TurisCyL: Planifica tu viaje por Castilla y León
+ * Copyright (C) 2020 David Población Criado
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 import 'package:flutter/cupertino.dart';
@@ -37,12 +38,15 @@ import 'package:turiscyl/models/turismo_activo.dart';
 import 'package:turiscyl/models/turismo_rural.dart';
 import 'package:turiscyl/models/vivienda.dart';
 import 'package:turiscyl/utils.dart';
-import 'package:turiscyl/values/constantes.dart';
+import 'package:turiscyl/values/strings.dart';
 import 'package:turiscyl/view_detalles.dart';
 
 import 'models/archivo.dart';
 import 'models/bar.dart';
 
+/// Vista que muestra un [ListView] con los elementos de la [categoriaElegida] y
+/// que cumplen la [consulta]. Si hay un error muestra un [Toast] advirtiendo
+/// y un [Text] con el mensaje de error de la BD
 class VistaInformacion extends StatefulWidget {
   final String categoriaElegida;
   final String consulta;
@@ -58,12 +62,6 @@ class _VistaInformacionState extends State<VistaInformacion> {
   List lista = List();
   DbHandler dbHandler = DbHandler();
   var objetoElegido;
-
-  // Filtros
-  /*
-  List<String> provinciasSeleccionadas = new List();
-  List<String> municipiosSeleccionadas = new List();
-  String busqueda = '';*/
 
   @override
   void initState() {
@@ -225,7 +223,6 @@ class _VistaInformacionState extends State<VistaInformacion> {
                                 (k) => lista.add(OficinaTurismo.fromMap(k)));
                         break;
                     }
-
                     return ListView.builder(
                       primary: true,
                       shrinkWrap: true,
@@ -249,10 +246,11 @@ class _VistaInformacionState extends State<VistaInformacion> {
                       },
                     );
                   } else if (snapshot.hasError) {
-                    Toast.show("Se ha producido un error con la base de datos, inténtelo de nuevo por favor", context, duration: 3);
+                    Toast.show(Strings.errorDb, context, duration: 3);
                     return Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: Text("Texto del error:\n\n $snapshot.error\n\nSi el error persiste, contacte con el desarrollador"),
+                      child: Text(
+                          "Texto del error:\n\n $snapshot.error\n\nSi el error persiste, contacte con el desarrollador"),
                     );
                   } else {
                     return Utils().cargandoDatos();

@@ -17,35 +17,11 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:turiscyl/utils.dart';
 
-/// Vista que muestra un [Html] dependiendo del [html] pasado como argumento,
-/// así como el [titulo]
-class VistaHtml extends StatelessWidget {
-  final String titulo;
-  final String html;
+/// Elecciones del menú superior derecho
+class Choice {
+  const Choice({this.title, this.icon});
 
-  VistaHtml({Key key, @required this.titulo, @required this.html})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(titulo),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Html(
-            data: html,
-            onLinkTap: (url) {
-              Utils().openUrl(url);
-            },
-          ),
-        ),
-      ),
-    );
-  }
+  final String title;
+  final IconData icon;
 }

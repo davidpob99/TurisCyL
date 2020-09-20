@@ -1,18 +1,19 @@
 /*
- * Copyright (C) 2020  David Población Criado
+ * TurisCyL: Planifica tu viaje por Castilla y León
+ * Copyright (C) 2020 David Población Criado
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 import 'package:add_2_calendar/add_2_calendar.dart';
@@ -46,8 +47,8 @@ import 'package:turiscyl/values/colores.dart';
 import 'package:turiscyl/values/keys.dart';
 import 'package:turiscyl/values/strings.dart';
 
+import 'choice.dart';
 import 'icons_turiscyl.dart';
-import 'material_design_icons.dart';
 import 'models/actividad_turistica.dart';
 import 'models/bar.dart';
 import 'models/guia.dart';
@@ -55,6 +56,8 @@ import 'models/lista.dart';
 import 'models/restaurante.dart';
 import 'models/salon_banquetes.dart';
 
+/// Vista con los detalles de un [elemento] turístico concreto, que puede ser
+/// de cualquiera de las subcategorías, dado por [categoriaElegida]
 class VistaDetalles extends StatefulWidget {
   final String categoriaElegida;
   final elemento;
@@ -67,35 +70,32 @@ class VistaDetalles extends StatefulWidget {
   _VistaDetallesState createState() => _VistaDetallesState();
 }
 
-class Choice {
-  const Choice({this.title, this.icon});
-
-  final String title;
-  final IconData icon;
-}
-
+/// Elementos del menú superior derecho
 const List<Choice> choices = const <Choice>[
-  const Choice(title: 'Abrir en', icon: Icons.open_in_new),
-  const Choice(title: 'Cómo llegar', icon: Icons.directions),
-  const Choice(title: 'Compartir', icon: Icons.share),
-  const Choice(title: 'StreetView', icon: Icons.streetview),
-  //const Choice(title: 'Notificaciones', icon: Icons.notifications)
+  const Choice(title: Strings.abrirEn, icon: Icons.open_in_new),
+  const Choice(title: Strings.comoLlegar, icon: Icons.directions),
+  const Choice(title: Strings.compartir, icon: Icons.share),
+  const Choice(title: Strings.streetView, icon: Icons.streetview),
 ];
 
 class _VistaDetallesState extends State<VistaDetalles> {
   DbHandler dbHandler = new DbHandler();
-  API api = API.userless(
-      Keys.keyClientIdFoursquare, Keys.keyClientSecretFoursquare);
+  API api =
+      API.userless(Keys.keyClientIdFoursquare, Keys.keyClientSecretFoursquare);
   Choice _selectedChoice = choices[0];
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
+  /// Dado un [widget.elemento], primero se encarga de buscar en la tabla
+  /// [Venue.NOMBRE] de la BD si existe:
+  /// * Si existe extrae la información de la BD
+  /// * Si no, hace una consulta a Foursquare para obtenerlo y después lo guarda
+  /// en la tabla de la BD [Venue.NOMBRE].
+  /// En el caso que tampoco lo encuentre en Foursquare invoca a
+  /// [_getGeolocation].
+  /// Devuelve un objeto [Venue] con los datos obtenidos
   Future<Venue> _getPlace() async {
     final List<Map> listaVenuesDb = await dbHandler.consulta(
         'SELECT * FROM Venues WHERE tipo="${widget.elemento.DB_NOMBRE}" AND numero_registro="${widget.elemento.numeroRegistro}"');
+
     if (listaVenuesDb.length == 1) {
       return Venue.fromMap(listaVenuesDb.first);
     } else {
@@ -122,9 +122,14 @@ class _VistaDetallesState extends State<VistaDetalles> {
     }
   }
 
+  /// Dado la dirección, municipio y provincia del [widget.elemento], intenta
+  /// hacer geocoding para obtener sus coordenadas. Devuelve un [Venue] con las
+  /// coordenadas si lo encuentra y si no [null]
   Future<Venue> _getGeolocation() async {
-    List<Placemark> placemark = await Geolocator().placemarkFromAddress(
-        "${widget.elemento.direccion},${widget.elemento.municipio},${widget.elemento.provincia}");
+    final List<Placemark> placemark = await Geolocator().placemarkFromAddress(
+        "${widget.elemento.direccion},${widget.elemento.municipio},${widget
+            .elemento.provincia}");
+
     if (placemark.length > 0) {
       return Venue.fromGeolocation(LatLng(placemark.first.position.latitude,
           placemark.first.position.longitude));
@@ -133,17 +138,21 @@ class _VistaDetallesState extends State<VistaDetalles> {
     }
   }
 
+  /// Se encarga de decidir el icono flotante dependiendo de
+  /// [widget.categoriaElegida]:
+  /// * [Evento.NOMBRE]: muestra la opción de guardarlo en el calendario
+  /// * Demás: muestra la opción para añadirlo a una [Lista]
   Widget _decidirFab() {
     switch (widget.categoriaElegida) {
       case Evento.NOMBRE:
         return new FloatingActionButton(
             child: Icon(
-              IconsTurisCyL.calendar_plus
+                IconsTurisCyL.calendar_plus
             ),
             onPressed: () {
               final Event event = Event(
                 title: widget.elemento.nombre,
-                description: widget.elemento.descripcion,
+                description: widget.elemento.descripcionApp,
                 location: widget.elemento.lugar,
                 startDate: widget.elemento.fechaInicio,
                 endDate: widget.elemento.fechaFin != null
@@ -162,14 +171,14 @@ class _VistaDetallesState extends State<VistaDetalles> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                        title: Text('Elegir lista'),
+                        title: Text(Strings.elegirLista),
                         actions: [
                           IconButton(
                             icon: Icon(
                                 Icons.add,
                                 color: Colores().primario
                             ),
-                            onPressed: (){
+                            onPressed: () {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -198,7 +207,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                         ),
                                         onTap: (){
                                           Toast.show(
-                                              "Añadido a la lista", context);
+                                              Strings.anadidoALista, context);
                                           Utils().anadirElementoALista(
                                               lista.id, widget.elemento);
                                           Navigator.pop(context);
@@ -219,6 +228,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
     }
   }
 
+  /// Decide cuál de las vistas mostrar dependiendo de [widget.categoriaElegida]
   // ignore: missing_return
   Widget _decidirVista() {
     switch (widget.categoriaElegida) {
@@ -261,6 +271,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
     }
   }
 
+  /// Muestra un [CarouselSlider] con 2 [Card]:
+  /// 1. [FlutterMap] centrado y con [Marker] en el ubicación del [_getPlace]
+  /// 2. [Image] obtenida de Foursquare a través de [_getPlace]
   Widget _fotoYMapa() {
     return FutureBuilder<Venue>(
         future: _getPlace(),
@@ -338,7 +351,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                         padding: const EdgeInsets.only(
                             left: 10, right: 10, top: 5, bottom: 5),
                         child: Text(
-                          "Es posible que la ubicación mostrada no se corresponda con la real",
+                          Strings.ubicacionNoReal,
                           style: TextStyle(color: Colors.grey, fontSize: 12),
                         ),
                       )
@@ -353,6 +366,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
         });
   }
 
+  /// Similar a [_fotoYMapa] pero específico para [Evento]
   Widget _fotoYMapaEvento() {
     return CarouselSlider(
       options:
@@ -407,9 +421,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
             height: 200,
             child: widget.elemento.urlImagen != ''
                 ? Image.network(widget.elemento.urlImagen,
-                    fit: BoxFit.cover, width: double.infinity)
+                fit: BoxFit.cover, width: double.infinity)
                 : Image.network(widget.elemento.urlMiniatura,
-                    fit: BoxFit.cover, width: double.infinity),
+                fit: BoxFit.cover, width: double.infinity),
             //child: Text("Funciona"),
           ),
         )
@@ -417,6 +431,8 @@ class _VistaDetallesState extends State<VistaDetalles> {
     );
   }
 
+  /// Muestra un [FlutterMap] dependiendo de [widget.elemento]. Solo disponible
+  /// en aquillos elementos que tengan posición dada
   Widget _soloMapa() {
     return Card(
       semanticContainer: true,
@@ -446,7 +462,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                   height: 80.0,
                   point: widget.elemento.posicion,
                   builder: (ctx) => new Container(
-                    child: Icon(Icons.place),
+                    child: Icon(Icons.place, color: Colores().primario),
                   ),
                 ),
               ],
@@ -457,6 +473,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
     );
   }
 
+  // Definiciones de cada una de las vistas de los elementos
   Widget _bar() {
     return Column(
       children: [
@@ -478,7 +495,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                               child: Center(
                                 child: Column(
                                   children: [
-                                    Text("Accesibilidad PMR",
+                                    Text(Strings.pmr,
                                         style: TextStyle(
                                             color: Colores().dark,
                                             fontWeight: FontWeight.bold)),
@@ -489,9 +506,11 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                         Icon(IconsTurisCyL.wheelchair_accessibility,
                                             color: Colores().dark),
                                         Text(
-                                          widget.elemento.pmr ? "Sí" : "No",
+                                          widget.elemento.pmr
+                                              ? Strings.si
+                                              : Strings.no,
                                           style:
-                                              TextStyle(color: Colores().dark),
+                                          TextStyle(color: Colores().dark),
                                         )
                                       ],
                                     ),
@@ -506,7 +525,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                               child: Center(
                                 child: Column(
                                   children: [
-                                    Text("Municipio",
+                                    Text(Strings.municipio,
                                         style: TextStyle(
                                             color: Colores().dark,
                                             fontWeight: FontWeight.bold)),
@@ -538,7 +557,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                               child: Center(
                                 child: Column(
                                   children: [
-                                    Text("Dirección",
+                                    Text(Strings.direccion,
                                         style: TextStyle(
                                             color: Colores().dark,
                                             fontWeight: FontWeight.bold)),
@@ -570,7 +589,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                               child: Center(
                                 child: Column(
                                   children: [
-                                    Text("Teléfono(s)",
+                                    Text(Strings.telefonos,
                                         style: TextStyle(
                                             color: Colores().dark,
                                             fontWeight: FontWeight.bold)),
@@ -582,7 +601,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             color: Colores().dark),
                                         InkWell(
                                           child: Text(
-                                            "${widget.elemento.telefono1 != '' ? widget.elemento.telefono1 : "No definido"}",
+                                            "${widget.elemento.telefono1 != ''
+                                                ? widget.elemento.telefono1
+                                                : Strings.noDefinido}",
                                             style: TextStyle(
                                                 color: Colores().light),
                                           ),
@@ -628,7 +649,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                               child: Center(
                                 child: Column(
                                   children: [
-                                    Text("Página web",
+                                    Text(Strings.web,
                                         style: TextStyle(
                                             color: Colores().dark,
                                             fontWeight: FontWeight.bold)),
@@ -642,7 +663,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           child: Text(
                                             widget.elemento.web != ''
                                                 ? "${widget.elemento.web}"
-                                                : "No definido",
+                                                : Strings.noDefinido,
                                             style: TextStyle(
                                                 color: Colores().light),
                                           ),
@@ -667,7 +688,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: widget.elemento.especialidades != ''
                                     ? Column(
                                         children: [
-                                          Text("Especialidades",
+                                          Text(Strings.especialidades,
                                               style: TextStyle(
                                                   color: Colores().dark,
                                                   fontWeight: FontWeight.bold)),
@@ -701,7 +722,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                               child: Center(
                                 child: Column(
                                   children: [
-                                    Text("Número registro",
+                                    Text(Strings.numeroRegistro,
                                         style: TextStyle(
                                             color: Colores().dark,
                                             fontWeight: FontWeight.bold)),
@@ -729,7 +750,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                               child: Center(
                                 child: Column(
                                   children: [
-                                    Text("Provincia",
+                                    Text(Strings.provincia,
                                         style: TextStyle(
                                             color: Colores().dark,
                                             fontWeight: FontWeight.bold)),
@@ -757,7 +778,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                               child: Center(
                                 child: Column(
                                   children: [
-                                    Text("Código postal",
+                                    Text(Strings.cp,
                                         style: TextStyle(
                                             color: Colores().dark,
                                             fontWeight: FontWeight.bold)),
@@ -789,7 +810,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                               child: Center(
                                 child: Column(
                                   children: [
-                                    Text("E-mail",
+                                    Text(Strings.email,
                                         style: TextStyle(
                                             color: Colores().dark,
                                             fontWeight: FontWeight.bold)),
@@ -803,7 +824,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           child: Text(
                                             widget.elemento.email != ''
                                                 ? "${widget.elemento.email}"
-                                                : "No definido",
+                                                : Strings.noDefinido,
                                             style: TextStyle(
                                                 color: Colores().light),
                                           ),
@@ -827,7 +848,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                               child: Center(
                                 child: Column(
                                   children: [
-                                    Text("Plazas",
+                                    Text(Strings.plazas,
                                         style: TextStyle(
                                             color: Colores().dark,
                                             fontWeight: FontWeight.bold)),
@@ -840,10 +861,10 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                         Text(
                                           widget.elemento.plazas > 0
                                               ? widget.elemento.plazas
-                                                  .toString()
-                                              : "No definido",
+                                              .toString()
+                                              : Strings.noDefinido,
                                           style:
-                                              TextStyle(color: Colores().dark),
+                                          TextStyle(color: Colores().dark),
                                         )
                                       ],
                                     ),
@@ -885,7 +906,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Accesibilidad PMR",
+                                      Text(Strings.pmr,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -896,7 +917,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           Icon(IconsTurisCyL.wheelchair_accessibility,
                                               color: Colores().dark),
                                           Text(
-                                            widget.elemento.pmr ? "Sí" : "No",
+                                            widget.elemento.pmr
+                                                ? Strings.si
+                                                : Strings.no,
                                             style: TextStyle(
                                                 color: Colores().dark),
                                           )
@@ -941,7 +964,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Municipio",
+                                      Text(Strings.municipio,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -973,7 +996,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Dirección",
+                                      Text(Strings.direccion,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1005,7 +1028,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Teléfono(s)",
+                                      Text(Strings.telefonos,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1017,7 +1040,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                               color: Colores().dark),
                                           InkWell(
                                             child: Text(
-                                              "${widget.elemento.telefono1 != '' ? widget.elemento.telefono1 : "No definido"}",
+                                              "${widget.elemento.telefono1 != ''
+                                                  ? widget.elemento.telefono1
+                                                  : Strings.noDefinido}",
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -1063,7 +1088,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Página web",
+                                      Text(Strings.web,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1078,7 +1103,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.web != ''
                                                   ? "${widget.elemento.web}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -1109,7 +1134,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Número registro",
+                                      Text(Strings.numeroRegistro,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1137,7 +1162,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Categoría",
+                                      Text(Strings.categoria,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1165,7 +1190,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Provincia",
+                                      Text(Strings.provincia,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1193,7 +1218,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Código postal",
+                                      Text(Strings.cp,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1225,7 +1250,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("E-mail",
+                                      Text(Strings.email,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1240,7 +1265,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.email != ''
                                                   ? "${widget.elemento.email}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -1264,7 +1289,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Plazas",
+                                      Text(Strings.plazas,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1277,8 +1302,8 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           Text(
                                             widget.elemento.plazas > 0
                                                 ? widget.elemento.plazas
-                                                    .toString()
-                                                : "No definido",
+                                                .toString()
+                                                : Strings.noDefinido,
                                             style: TextStyle(
                                                 color: Colores().dark),
                                           )
@@ -1323,7 +1348,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Accesibilidad PMR",
+                                      Text(Strings.pmr,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1334,7 +1359,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           Icon(IconsTurisCyL.wheelchair_accessibility,
                                               color: Colores().dark),
                                           Text(
-                                            widget.elemento.pmr ? "Sí" : "No",
+                                            widget.elemento.pmr
+                                                ? Strings.si
+                                                : Strings.no,
                                             style: TextStyle(
                                                 color: Colores().dark),
                                           )
@@ -1351,7 +1378,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Provincia",
+                                      Text(Strings.provincia,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1379,7 +1406,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Municipio",
+                                      Text(Strings.municipio,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1411,7 +1438,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Dirección",
+                                      Text(Strings.direccion,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1443,7 +1470,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Teléfono(s)",
+                                      Text(Strings.telefonos,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1455,7 +1482,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                               color: Colores().dark),
                                           InkWell(
                                             child: Text(
-                                              "${widget.elemento.telefono1 != '' ? widget.elemento.telefono1 : "No definido"}",
+                                              "${widget.elemento.telefono1 != ''
+                                                  ? widget.elemento.telefono1
+                                                  : Strings.noDefinido}",
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -1501,7 +1530,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Página web",
+                                      Text(Strings.web,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1516,7 +1545,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.web != ''
                                                   ? "${widget.elemento.web}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -1541,11 +1570,11 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                   child: widget.elemento.especialidades != ''
                                       ? Column(
                                           children: [
-                                            Text("Especialidades",
+                                            Text(Strings.especialidades,
                                                 style: TextStyle(
                                                     color: Colores().dark,
                                                     fontWeight:
-                                                        FontWeight.bold)),
+                                                    FontWeight.bold)),
                                             Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.spaceEvenly,
@@ -1577,7 +1606,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Número registro",
+                                      Text(Strings.numeroRegistro,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1633,7 +1662,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Provincia",
+                                      Text(Strings.provincia,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1661,7 +1690,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Código postal",
+                                      Text(Strings.cp,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1693,7 +1722,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("E-mail",
+                                      Text(Strings.email,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1708,7 +1737,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.email != ''
                                                   ? "${widget.elemento.email}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -1732,7 +1761,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Plazas",
+                                      Text(Strings.plazas,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1745,8 +1774,8 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           Text(
                                             widget.elemento.plazas > 0
                                                 ? widget.elemento.plazas
-                                                    .toString()
-                                                : "No definido",
+                                                .toString()
+                                                : Strings.noDefinido,
                                             style: TextStyle(
                                                 color: Colores().dark),
                                           )
@@ -1791,7 +1820,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Accesibilidad PMR",
+                                      Text(Strings.pmr,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1802,7 +1831,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           Icon(IconsTurisCyL.wheelchair_accessibility,
                                               color: Colores().dark),
                                           Text(
-                                            widget.elemento.pmr ? "Sí" : "No",
+                                            widget.elemento.pmr
+                                                ? Strings.si
+                                                : Strings.no,
                                             style: TextStyle(
                                                 color: Colores().dark),
                                           )
@@ -1819,7 +1850,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Provincia",
+                                      Text(Strings.provincia,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1847,7 +1878,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Municipio",
+                                      Text(Strings.municipio,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1879,7 +1910,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Dirección",
+                                      Text(Strings.direccion,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1911,7 +1942,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Teléfono(s)",
+                                      Text(Strings.telefonos,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1923,7 +1954,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                               color: Colores().dark),
                                           InkWell(
                                             child: Text(
-                                              "${widget.elemento.telefono1 != '' ? widget.elemento.telefono1 : "No definido"}",
+                                              "${widget.elemento.telefono1 != ''
+                                                  ? widget.elemento.telefono1
+                                                  : Strings.noDefinido}",
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -1969,7 +2002,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Página web",
+                                      Text(Strings.web,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -1984,7 +2017,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.web != ''
                                                   ? "${widget.elemento.web}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -2015,7 +2048,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Número registro",
+                                      Text(Strings.numeroRegistro,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2071,7 +2104,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Provincia",
+                                      Text(Strings.provincia,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2099,7 +2132,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Código postal",
+                                      Text(Strings.cp,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2131,7 +2164,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("E-mail",
+                                      Text(Strings.email,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2146,7 +2179,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.email != ''
                                                   ? "${widget.elemento.email}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -2170,7 +2203,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Plazas",
+                                      Text(Strings.plazas,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2183,8 +2216,8 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           Text(
                                             widget.elemento.plazas > 0
                                                 ? widget.elemento.plazas
-                                                    .toString()
-                                                : "No definido",
+                                                .toString()
+                                                : Strings.noDefinido,
                                             style: TextStyle(
                                                 color: Colores().dark),
                                           )
@@ -2229,7 +2262,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Accesibilidad PMR",
+                                      Text(Strings.pmr,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2240,7 +2273,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           Icon(IconsTurisCyL.wheelchair_accessibility,
                                               color: Colores().dark),
                                           Text(
-                                            widget.elemento.pmr ? "Sí" : "No",
+                                            widget.elemento.pmr
+                                                ? Strings.si
+                                                : Strings.no,
                                             style: TextStyle(
                                                 color: Colores().dark),
                                           )
@@ -2287,7 +2322,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Municipio",
+                                      Text(Strings.municipio,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2319,7 +2354,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Dirección",
+                                      Text(Strings.direccion,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2351,7 +2386,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Teléfono(s)",
+                                      Text(Strings.telefonos,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2363,7 +2398,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                               color: Colores().dark),
                                           InkWell(
                                             child: Text(
-                                              "${widget.elemento.telefono1 != '' ? widget.elemento.telefono1 : "No definido"}",
+                                              "${widget.elemento.telefono1 != ''
+                                                  ? widget.elemento.telefono1
+                                                  : Strings.noDefinido}",
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -2409,7 +2446,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Página web",
+                                      Text(Strings.web,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2424,7 +2461,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.web != ''
                                                   ? "${widget.elemento.web}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -2455,7 +2492,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Número registro",
+                                      Text(Strings.numeroRegistro,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2483,7 +2520,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Provincia",
+                                      Text(Strings.provincia,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2511,7 +2548,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Código postal",
+                                      Text(Strings.cp,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2543,7 +2580,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("E-mail",
+                                      Text(Strings.email,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2558,7 +2595,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.email != ''
                                                   ? "${widget.elemento.email}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -2582,7 +2619,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Plazas",
+                                      Text(Strings.plazas,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2595,8 +2632,8 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           Text(
                                             widget.elemento.plazas > 0
                                                 ? widget.elemento.plazas
-                                                    .toString()
-                                                : "No definido",
+                                                .toString()
+                                                : Strings.noDefinido,
                                             style: TextStyle(
                                                 color: Colores().dark),
                                           )
@@ -2641,7 +2678,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Accesibilidad PMR",
+                                      Text(Strings.pmr,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2652,7 +2689,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           Icon(IconsTurisCyL.wheelchair_accessibility,
                                               color: Colores().dark),
                                           Text(
-                                            widget.elemento.pmr ? "Sí" : "No",
+                                            widget.elemento.pmr
+                                                ? Strings.si
+                                                : Strings.no,
                                             style: TextStyle(
                                                 color: Colores().dark),
                                           )
@@ -2669,7 +2708,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Provincia",
+                                      Text(Strings.provincia,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2697,7 +2736,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Municipio",
+                                      Text(Strings.municipio,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2729,7 +2768,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Dirección",
+                                      Text(Strings.direccion,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2761,7 +2800,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Teléfono(s)",
+                                      Text(Strings.telefonos,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2773,7 +2812,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                               color: Colores().dark),
                                           InkWell(
                                             child: Text(
-                                              "${widget.elemento.telefono1 != '' ? widget.elemento.telefono1 : "No definido"}",
+                                              "${widget.elemento.telefono1 != ''
+                                                  ? widget.elemento.telefono1
+                                                  : Strings.noDefinido}",
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -2819,7 +2860,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Página web",
+                                      Text(Strings.web,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2834,7 +2875,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.web != ''
                                                   ? "${widget.elemento.web}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -2865,7 +2906,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Número registro",
+                                      Text(Strings.numeroRegistro,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2921,7 +2962,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Provincia",
+                                      Text(Strings.provincia,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2949,7 +2990,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Código postal",
+                                      Text(Strings.cp,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2981,7 +3022,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("E-mail",
+                                      Text(Strings.email,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -2996,7 +3037,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.email != ''
                                                   ? "${widget.elemento.email}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -3020,7 +3061,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Plazas",
+                                      Text(Strings.plazas,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3033,8 +3074,8 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           Text(
                                             widget.elemento.plazas > 0
                                                 ? widget.elemento.plazas
-                                                    .toString()
-                                                : "No definido",
+                                                .toString()
+                                                : Strings.noDefinido,
                                             style: TextStyle(
                                                 color: Colores().dark),
                                           )
@@ -3079,7 +3120,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Accesibilidad PMR",
+                                      Text(Strings.pmr,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3090,7 +3131,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           Icon(IconsTurisCyL.wheelchair_accessibility,
                                               color: Colores().dark),
                                           Text(
-                                            widget.elemento.pmr ? "Sí" : "No",
+                                            widget.elemento.pmr
+                                                ? Strings.si
+                                                : Strings.no,
                                             style: TextStyle(
                                                 color: Colores().dark),
                                           )
@@ -3107,7 +3150,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Municipio",
+                                      Text(Strings.municipio,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3139,7 +3182,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Dirección",
+                                      Text(Strings.direccion,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3171,7 +3214,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Teléfono(s)",
+                                      Text(Strings.telefonos,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3183,7 +3226,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                               color: Colores().dark),
                                           InkWell(
                                             child: Text(
-                                              "${widget.elemento.telefono1 != '' ? widget.elemento.telefono1 : "No definido"}",
+                                              "${widget.elemento.telefono1 != ''
+                                                  ? widget.elemento.telefono1
+                                                  : Strings.noDefinido}",
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -3229,7 +3274,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Página web",
+                                      Text(Strings.web,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3244,7 +3289,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.web != ''
                                                   ? "${widget.elemento.web}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -3275,7 +3320,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Número registro",
+                                      Text(Strings.numeroRegistro,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3331,7 +3376,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Provincia",
+                                      Text(Strings.provincia,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3359,7 +3404,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Código postal",
+                                      Text(Strings.cp,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3391,7 +3436,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("E-mail",
+                                      Text(Strings.email,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3406,7 +3451,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.email != ''
                                                   ? "${widget.elemento.email}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -3430,7 +3475,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Plazas",
+                                      Text(Strings.plazas,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3443,8 +3488,8 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           Text(
                                             widget.elemento.plazas > 0
                                                 ? widget.elemento.plazas
-                                                    .toString()
-                                                : "No definido",
+                                                .toString()
+                                                : Strings.noDefinido,
                                             style: TextStyle(
                                                 color: Colores().dark),
                                           )
@@ -3489,7 +3534,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Accesibilidad PMR",
+                                      Text(Strings.pmr,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3500,7 +3545,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           Icon(IconsTurisCyL.wheelchair_accessibility,
                                               color: Colores().dark),
                                           Text(
-                                            widget.elemento.pmr ? "Sí" : "No",
+                                            widget.elemento.pmr
+                                                ? Strings.si
+                                                : Strings.no,
                                             style: TextStyle(
                                                 color: Colores().dark),
                                           )
@@ -3517,7 +3564,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Municipio",
+                                      Text(Strings.municipio,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3549,7 +3596,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Dirección",
+                                      Text(Strings.direccion,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3581,7 +3628,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Teléfono(s)",
+                                      Text(Strings.telefonos,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3593,7 +3640,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                               color: Colores().dark),
                                           InkWell(
                                             child: Text(
-                                              "${widget.elemento.telefono1 != '' ? widget.elemento.telefono1 : "No definido"}",
+                                              "${widget.elemento.telefono1 != ''
+                                                  ? widget.elemento.telefono1
+                                                  : Strings.noDefinido}",
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -3639,7 +3688,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Página web",
+                                      Text(Strings.web,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3654,7 +3703,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.web != ''
                                                   ? "${widget.elemento.web}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -3685,7 +3734,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Número registro",
+                                      Text(Strings.numeroRegistro,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3741,7 +3790,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Provincia",
+                                      Text(Strings.provincia,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3769,7 +3818,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Código postal",
+                                      Text(Strings.cp,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3801,7 +3850,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("E-mail",
+                                      Text(Strings.email,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3816,7 +3865,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.email != ''
                                                   ? "${widget.elemento.email}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -3840,7 +3889,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Plazas",
+                                      Text(Strings.plazas,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3853,8 +3902,8 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           Text(
                                             widget.elemento.plazas > 0
                                                 ? widget.elemento.plazas
-                                                    .toString()
-                                                : "No definido",
+                                                .toString()
+                                                : Strings.noDefinido,
                                             style: TextStyle(
                                                 color: Colores().dark),
                                           )
@@ -3899,7 +3948,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Accesibilidad PMR",
+                                      Text(Strings.pmr,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3910,7 +3959,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           Icon(IconsTurisCyL.wheelchair_accessibility,
                                               color: Colores().dark),
                                           Text(
-                                            widget.elemento.pmr ? "Sí" : "No",
+                                            widget.elemento.pmr
+                                                ? Strings.si
+                                                : Strings.no,
                                             style: TextStyle(
                                                 color: Colores().dark),
                                           )
@@ -3927,7 +3978,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Provincia",
+                                      Text(Strings.provincia,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3955,7 +4006,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Municipio",
+                                      Text(Strings.municipio,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -3987,7 +4038,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Dirección",
+                                      Text(Strings.direccion,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -4019,7 +4070,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Teléfono(s)",
+                                      Text(Strings.telefonos,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -4031,7 +4082,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                               color: Colores().dark),
                                           InkWell(
                                             child: Text(
-                                              "${widget.elemento.telefono1 != '' ? widget.elemento.telefono1 : "No definido"}",
+                                              "${widget.elemento.telefono1 != ''
+                                                  ? widget.elemento.telefono1
+                                                  : Strings.noDefinido}",
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -4077,7 +4130,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Página web",
+                                      Text(Strings.web,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -4092,7 +4145,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.web != ''
                                                   ? "${widget.elemento.web}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -4116,7 +4169,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Posada real",
+                                      Text(Strings.posadaReal,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -4128,8 +4181,8 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                               color: Colores().dark),
                                           Text(
                                             widget.elemento.posadaReal
-                                                ? "Sí"
-                                                : "No",
+                                                ? Strings.si
+                                                : Strings.no,
                                             style: TextStyle(
                                                 color: Colores().dark),
                                           )
@@ -4153,7 +4206,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Número registro",
+                                      Text(Strings.numeroRegistro,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -4209,7 +4262,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Provincia",
+                                      Text(Strings.provincia,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -4237,7 +4290,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Código postal",
+                                      Text(Strings.cp,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -4269,7 +4322,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("E-mail",
+                                      Text(Strings.email,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -4284,7 +4337,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.email != ''
                                                   ? "${widget.elemento.email}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -4308,7 +4361,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Plazas",
+                                      Text(Strings.plazas,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -4321,8 +4374,8 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           Text(
                                             widget.elemento.plazas > 0
                                                 ? widget.elemento.plazas
-                                                    .toString()
-                                                : "No definido",
+                                                .toString()
+                                                : Strings.noDefinido,
                                             style: TextStyle(
                                                 color: Colores().dark),
                                           )
@@ -4367,7 +4420,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Accesibilidad PMR",
+                                      Text(Strings.pmr,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -4378,7 +4431,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           Icon(IconsTurisCyL.wheelchair_accessibility,
                                               color: Colores().dark),
                                           Text(
-                                            widget.elemento.pmr ? "Sí" : "No",
+                                            widget.elemento.pmr
+                                                ? Strings.si
+                                                : Strings.no,
                                             style: TextStyle(
                                                 color: Colores().dark),
                                           )
@@ -4395,7 +4450,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Provincia",
+                                      Text(Strings.provincia,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -4423,7 +4478,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Municipio",
+                                      Text(Strings.municipio,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -4455,7 +4510,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Dirección",
+                                      Text(Strings.direccion,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -4487,7 +4542,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Teléfono(s)",
+                                      Text(Strings.telefonos,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -4499,7 +4554,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                               color: Colores().dark),
                                           InkWell(
                                             child: Text(
-                                              "${widget.elemento.telefono1 != '' ? widget.elemento.telefono1 : "No definido"}",
+                                              "${widget.elemento.telefono1 != ''
+                                                  ? widget.elemento.telefono1
+                                                  : Strings.noDefinido}",
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -4533,7 +4590,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Página web",
+                                      Text(Strings.web,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -4548,7 +4605,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.web != ''
                                                   ? "${widget.elemento.web}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -4579,7 +4636,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Número registro",
+                                      Text(Strings.numeroRegistro,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -4607,7 +4664,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Provincia",
+                                      Text(Strings.provincia,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -4635,7 +4692,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Código postal",
+                                      Text(Strings.cp,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -4667,7 +4724,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("E-mail",
+                                      Text(Strings.email,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -4682,7 +4739,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.email != ''
                                                   ? "${widget.elemento.email}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -4706,7 +4763,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Plazas",
+                                      Text(Strings.plazas,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -4719,8 +4776,8 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           Text(
                                             widget.elemento.plazas > 0
                                                 ? widget.elemento.plazas
-                                                    .toString()
-                                                : "No definido",
+                                                .toString()
+                                                : Strings.noDefinido,
                                             style: TextStyle(
                                                 color: Colores().dark),
                                           )
@@ -4767,7 +4824,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                     child: Center(
                                       child: Column(
                                         children: [
-                                          Text("ID BIC",
+                                          Text(Strings.idBic,
                                               style: TextStyle(
                                                   color: Colores().dark,
                                                   fontWeight: FontWeight.bold)),
@@ -4798,11 +4855,11 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           child: Center(
                                             child: Column(
                                               children: [
-                                                Text("Tipo Monumento",
+                                                Text(Strings.tipoMonumento,
                                                     style: TextStyle(
                                                         color: Colores().dark,
                                                         fontWeight:
-                                                            FontWeight.bold)),
+                                                        FontWeight.bold)),
                                                 Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
@@ -4833,11 +4890,11 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           child: Center(
                                             child: Column(
                                               children: [
-                                                Text("Tipo Construcción",
+                                                Text(Strings.tipoConstruccion,
                                                     style: TextStyle(
                                                         color: Colores().dark,
                                                         fontWeight:
-                                                            FontWeight.bold)),
+                                                        FontWeight.bold)),
                                                 Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
@@ -4870,7 +4927,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                     child: Center(
                                       child: Column(
                                         children: [
-                                          Text("Municipio",
+                                          Text(Strings.municipio,
                                               style: TextStyle(
                                                   color: Colores().dark,
                                                   fontWeight: FontWeight.bold)),
@@ -4904,11 +4961,11 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           child: Center(
                                             child: Column(
                                               children: [
-                                                Text("Dirección",
+                                                Text(Strings.direccion,
                                                     style: TextStyle(
                                                         color: Colores().dark,
                                                         fontWeight:
-                                                            FontWeight.bold)),
+                                                        FontWeight.bold)),
                                                 Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
@@ -4941,7 +4998,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                     child: Center(
                                       child: Column(
                                         children: [
-                                          Text("Teléfono(s)",
+                                          Text(Strings.telefonos,
                                               style: TextStyle(
                                                   color: Colores().dark,
                                                   fontWeight: FontWeight.bold)),
@@ -4953,7 +5010,10 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   color: Colores().dark),
                                               InkWell(
                                                 child: Text(
-                                                  "${widget.elemento.telefono != '' ? widget.elemento.telefono : "No definido"}",
+                                                  "${widget.elemento.telefono !=
+                                                      '' ? widget.elemento
+                                                      .telefono : Strings
+                                                      .noDefinido}",
                                                   style: TextStyle(
                                                       color: Colores().light),
                                                 ),
@@ -4975,7 +5035,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                     child: Center(
                                       child: Column(
                                         children: [
-                                          Text("Página web",
+                                          Text(Strings.web,
                                               style: TextStyle(
                                                   color: Colores().dark,
                                                   fontWeight: FontWeight.bold)),
@@ -4990,7 +5050,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                 child: Text(
                                                   widget.elemento.web != ''
                                                       ? "${widget.elemento.web}"
-                                                      : "No definido",
+                                                      : Strings.noDefinido,
                                                   style: TextStyle(
                                                       color: Colores().light),
                                                 ),
@@ -5021,7 +5081,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                     child: Center(
                                       child: Column(
                                         children: [
-                                          Text("Número registro",
+                                          Text(Strings.numeroRegistro,
                                               style: TextStyle(
                                                   color: Colores().dark,
                                                   fontWeight: FontWeight.bold)),
@@ -5085,7 +5145,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Provincia",
+                                      Text(Strings.provincia,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -5113,7 +5173,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                     child: Center(
                                       child: Column(
                                         children: [
-                                          Text("Código postal",
+                                          Text(Strings.cp,
                                               style: TextStyle(
                                                   color: Colores().dark,
                                                   fontWeight: FontWeight.bold)),
@@ -5145,7 +5205,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                     child: Center(
                                       child: Column(
                                         children: [
-                                          Text("E-mail",
+                                          Text(Strings.email,
                                               style: TextStyle(
                                                   color: Colores().dark,
                                                   fontWeight: FontWeight.bold)),
@@ -5159,8 +5219,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   child: InkWell(
                                                 child: Text(
                                                   widget.elemento.email != ''
-                                                      ? "${widget.elemento.email}"
-                                                      : "No definido",
+                                                      ? "${widget.elemento
+                                                      .email}"
+                                                      : Strings.noDefinido,
                                                   style: TextStyle(
                                                       color: Colores().light),
                                                 ),
@@ -5184,14 +5245,14 @@ class _VistaDetallesState extends State<VistaDetalles> {
                         ],
                       ),
                     ),
-                    Text("Descripción",
+                    Text(Strings.descripcion,
                         style: TextStyle(
                             color: Colores().dark,
                             fontWeight: FontWeight.bold)),
-                    widget.elemento.descripcion != null
-                        ? Html(data: widget.elemento.descripcion)
-                        : Text("No disponible"),
-                    Text("Horarios y Tarifas",
+                    widget.elemento.descripcionApp != null
+                        ? Html(data: widget.elemento.descripcionApp)
+                        : Text(Strings.noDisponible),
+                    Text(Strings.horariosTarifas,
                         style: TextStyle(
                             color: Colores().dark,
                             fontWeight: FontWeight.bold)),
@@ -5230,7 +5291,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                     child: Center(
                                       child: Column(
                                         children: [
-                                          Text("Localidad",
+                                          Text(Strings.localidad,
                                               style: TextStyle(
                                                   color: Colores().dark,
                                                   fontWeight: FontWeight.bold)),
@@ -5264,11 +5325,11 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           child: Center(
                                             child: Column(
                                               children: [
-                                                Text("Dirección",
+                                                Text(Strings.direccion,
                                                     style: TextStyle(
                                                         color: Colores().dark,
                                                         fontWeight:
-                                                            FontWeight.bold)),
+                                                        FontWeight.bold)),
                                                 Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
@@ -5300,7 +5361,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                     child: Center(
                                       child: Column(
                                         children: [
-                                          Text("Teléfono",
+                                          Text(Strings.telefono,
                                               style: TextStyle(
                                                   color: Colores().dark,
                                                   fontWeight: FontWeight.bold)),
@@ -5312,7 +5373,10 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   color: Colores().dark),
                                               InkWell(
                                                 child: Text(
-                                                  "${widget.elemento.telefono != '' ? widget.elemento.telefono : "No definido"}",
+                                                  "${widget.elemento.telefono !=
+                                                      '' ? widget.elemento
+                                                      .telefono : Strings
+                                                      .noDefinido}",
                                                   style: TextStyle(
                                                       color: Colores().light),
                                                 ),
@@ -5334,7 +5398,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                     child: Center(
                                       child: Column(
                                         children: [
-                                          Text("Página web",
+                                          Text(Strings.web,
                                               style: TextStyle(
                                                   color: Colores().dark,
                                                   fontWeight: FontWeight.bold)),
@@ -5349,7 +5413,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                 child: Text(
                                                   widget.elemento.web != ''
                                                       ? "${widget.elemento.web}"
-                                                      : "No definido",
+                                                      : Strings.noDefinido,
                                                   style: TextStyle(
                                                       color: Colores().light),
                                                 ),
@@ -5380,7 +5444,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Provincia",
+                                      Text(Strings.provincia,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -5408,7 +5472,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                     child: Center(
                                       child: Column(
                                         children: [
-                                          Text("Código postal",
+                                          Text(Strings.cp,
                                               style: TextStyle(
                                                   color: Colores().dark,
                                                   fontWeight: FontWeight.bold)),
@@ -5440,7 +5504,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                     child: Center(
                                       child: Column(
                                         children: [
-                                          Text("E-mail",
+                                          Text(Strings.email,
                                               style: TextStyle(
                                                   color: Colores().dark,
                                                   fontWeight: FontWeight.bold)),
@@ -5454,8 +5518,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                   child: InkWell(
                                                 child: Text(
                                                   widget.elemento.email != ''
-                                                      ? "${widget.elemento.email}"
-                                                      : "No definido",
+                                                      ? "${widget.elemento
+                                                      .email}"
+                                                      : Strings.noDefinido,
                                                   style: TextStyle(
                                                       color: Colores().light),
                                                 ),
@@ -5479,21 +5544,21 @@ class _VistaDetallesState extends State<VistaDetalles> {
                         ],
                       ),
                     ),
-                    Text("Descripción",
+                    Text(Strings.descripcion,
                         style: TextStyle(
                             color: Colores().dark,
                             fontWeight: FontWeight.bold)),
-                    widget.elemento.descripcion != ''
-                        ? Text(widget.elemento.descripcion)
-                        : Text("No disponible"),
-                    Text("Información adicional",
+                    widget.elemento.descripcionApp != ''
+                        ? Text(widget.elemento.descripcionApp)
+                        : Text(Strings.noDisponible),
+                    Text(Strings.infoAdicional,
                         style: TextStyle(
                             color: Colores().dark,
                             fontWeight: FontWeight.bold)),
                     widget.elemento.informacion != ''
                         ? Html(data: widget.elemento.informacion)
-                        : Text("No disponible"),
-                    Text("Enlace al contenido",
+                        : Text(Strings.noDisponible),
+                    Text(Strings.enlaceContenido,
                         style: TextStyle(
                             color: Colores().dark,
                             fontWeight: FontWeight.bold)),
@@ -5506,13 +5571,13 @@ class _VistaDetallesState extends State<VistaDetalles> {
                         Utils().openUrl(widget.elemento.enlaceContenido);
                       },
                     ),
-                    Text("Datos personales",
+                    Text(Strings.datosPersonales,
                         style: TextStyle(
                             color: Colores().dark,
                             fontWeight: FontWeight.bold)),
                     widget.elemento.datosPersonales != ''
                         ? Html(data: widget.elemento.datosPersonales)
-                        : Text("No disponible"),
+                        : Text(Strings.noDisponible),
                   ],
                 ),
               ),
@@ -5543,7 +5608,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                   child: Center(
                                     child: Column(
                                       children: [
-                                        Text("Accesibilidad PMR",
+                                        Text(Strings.pmr,
                                             style: TextStyle(
                                                 color: Colores().dark,
                                                 fontWeight: FontWeight.bold)),
@@ -5577,7 +5642,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                   child: Center(
                                     child: Column(
                                       children: [
-                                        Text("Localidad",
+                                        Text(Strings.localidad,
                                             style: TextStyle(
                                                 color: Colores().dark,
                                                 fontWeight: FontWeight.bold)),
@@ -5616,7 +5681,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                   child: Center(
                                     child: Column(
                                       children: [
-                                        Text("Código",
+                                        Text(Strings.codigo,
                                             style: TextStyle(
                                                 color: Colores().dark,
                                                 fontWeight: FontWeight.bold)),
@@ -5680,31 +5745,31 @@ class _VistaDetallesState extends State<VistaDetalles> {
                       ],
                     ),
                   ),
-                  Text("Horario de apertura",
+                  Text(Strings.horarioApertura,
                       style: TextStyle(
                           color: Colores().dark, fontWeight: FontWeight.bold)),
                   widget.elemento.horario != ''
                       ? Html(data: widget.elemento.horario)
-                      : Text("No disponible"),
-                  Text("Servicios disponibles",
+                      : Text(Strings.noDisponible),
+                  Text(Strings.serviciosDisponibles,
                       style: TextStyle(
                           color: Colores().dark, fontWeight: FontWeight.bold)),
                   widget.elemento.servicios != ''
                       ? Html(data: widget.elemento.servicios)
-                      : Text("No disponible"),
-                  Text("Requisitos específicos para el acceso",
+                      : Text(Strings.noDisponible),
+                  Text(Strings.requisitosEspecificos,
                       style: TextStyle(
                           color: Colores().dark, fontWeight: FontWeight.bold)),
                   widget.elemento.horario != ''
                       ? Text(widget.elemento.requisitos)
-                      : Text("No disponible"),
-                  Text("Información adicional",
+                      : Text(Strings.noDisponible),
+                  Text(Strings.infoAdicional,
                       style: TextStyle(
                           color: Colores().dark, fontWeight: FontWeight.bold)),
                   widget.elemento.informacion != ''
                       ? Html(data: widget.elemento.informacion)
-                      : Text("No disponible"),
-                  Text("Enlace al contenido",
+                      : Text(Strings.noDisponible),
+                  Text(Strings.enlaceContenido,
                       style: TextStyle(
                           color: Colores().dark, fontWeight: FontWeight.bold)),
                   Padding(
@@ -5737,16 +5802,16 @@ class _VistaDetallesState extends State<VistaDetalles> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Text("Lugar de celebración",
+                    Text(Strings.lugarCelebracion,
                         style: TextStyle(
                             color: Colores().dark,
                             fontWeight: FontWeight.bold)),
                     widget.elemento.lugar != ''
                         ? Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Text(widget.elemento.lugar),
-                          )
-                        : Text("No disponible"),
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Text(widget.elemento.lugar),
+                    )
+                        : Text(Strings.noDisponible),
                     Container(
                       child: new Row(
                         children: <Widget>[
@@ -5760,7 +5825,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                     child: Center(
                                       child: Column(
                                         children: [
-                                          Text("Fecha inicio",
+                                          Text(Strings.fechaInicio,
                                               style: TextStyle(
                                                   color: Colores().dark,
                                                   fontWeight: FontWeight.bold)),
@@ -5824,7 +5889,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                     child: Center(
                                       child: Column(
                                         children: [
-                                          Text("Precio",
+                                          Text(Strings.precio,
                                               style: TextStyle(
                                                   color: Colores().dark,
                                                   fontWeight: FontWeight.bold)),
@@ -5856,7 +5921,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                     child: Center(
                                       child: Column(
                                         children: [
-                                          Text("Localidad",
+                                          Text(Strings.localidad,
                                               style: TextStyle(
                                                   color: Colores().dark,
                                                   fontWeight: FontWeight.bold)),
@@ -5890,11 +5955,11 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                           child: Center(
                                             child: Column(
                                               children: [
-                                                Text("Dirección",
+                                                Text(Strings.direccion,
                                                     style: TextStyle(
                                                         color: Colores().dark,
                                                         fontWeight:
-                                                            FontWeight.bold)),
+                                                        FontWeight.bold)),
                                                 Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
@@ -5933,7 +5998,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                     child: Center(
                                       child: Column(
                                         children: [
-                                          Text("Fecha fin",
+                                          Text(Strings.fechaFin,
                                               style: TextStyle(
                                                   color: Colores().dark,
                                                   fontWeight: FontWeight.bold)),
@@ -6009,7 +6074,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                     child: Center(
                                       child: Column(
                                         children: [
-                                          Text("Destinatarios",
+                                          Text(Strings.destinatarios,
                                               style: TextStyle(
                                                   color: Colores().dark,
                                                   fontWeight: FontWeight.bold)),
@@ -6041,7 +6106,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Provincia",
+                                      Text(Strings.provincia,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -6069,7 +6134,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                     child: Center(
                                       child: Column(
                                         children: [
-                                          Text("Código postal",
+                                          Text(Strings.cp,
                                               style: TextStyle(
                                                   color: Colores().dark,
                                                   fontWeight: FontWeight.bold)),
@@ -6101,14 +6166,14 @@ class _VistaDetallesState extends State<VistaDetalles> {
                         ],
                       ),
                     ),
-                    Text("Descripción",
+                    Text(Strings.descripcion,
                         style: TextStyle(
                             color: Colores().dark,
                             fontWeight: FontWeight.bold)),
-                    widget.elemento.descripcion != ''
-                        ? Html(data: widget.elemento.descripcion)
-                        : Text("No disponible"),
-                    Text("Enlace al contenido",
+                    widget.elemento.descripcionApp != ''
+                        ? Html(data: widget.elemento.descripcionApp)
+                        : Text(Strings.noDisponible),
+                    Text(Strings.enlaceContenido,
                         style: TextStyle(
                             color: Colores().dark,
                             fontWeight: FontWeight.bold)),
@@ -6151,7 +6216,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Municipio",
+                                      Text(Strings.municipio,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -6183,7 +6248,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Dirección",
+                                      Text(Strings.direccion,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -6215,7 +6280,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Teléfono(s)",
+                                      Text(Strings.telefonos,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -6227,7 +6292,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                               color: Colores().dark),
                                           InkWell(
                                             child: Text(
-                                              "${widget.elemento.telefono1 != '' ? widget.elemento.telefono1 : "No definido"}",
+                                              "${widget.elemento.telefono1 != ''
+                                                  ? widget.elemento.telefono1
+                                                  : Strings.noDefinido}",
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -6273,7 +6340,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Página web",
+                                      Text(Strings.web,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -6288,7 +6355,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.web != ''
                                                   ? "${widget.elemento.web}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -6319,7 +6386,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Número registro",
+                                      Text(Strings.numeroRegistro,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -6347,7 +6414,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Provincia",
+                                      Text(Strings.provincia,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -6375,7 +6442,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Código postal",
+                                      Text(Strings.cp,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -6407,7 +6474,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("E-mail",
+                                      Text(Strings.email,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -6422,7 +6489,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.email != ''
                                                   ? "${widget.elemento.email}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -6473,7 +6540,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Idiomas",
+                                      Text(Strings.idiomas,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -6505,7 +6572,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Teléfono(s)",
+                                      Text(Strings.telefonos,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -6517,7 +6584,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                               color: Colores().dark),
                                           InkWell(
                                             child: Text(
-                                              "${widget.elemento.telefono1 != '' ? widget.elemento.telefono1 : "No definido"}",
+                                              "${widget.elemento.telefono1 != ''
+                                                  ? widget.elemento.telefono1
+                                                  : Strings.noDefinido}",
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -6551,7 +6620,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Página web",
+                                      Text(Strings.web,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -6566,7 +6635,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.web != ''
                                                   ? "${widget.elemento.web}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -6597,7 +6666,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Número guía",
+                                      Text(Strings.numeroGuia,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -6625,7 +6694,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Provincia",
+                                      Text(Strings.provincia,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -6653,7 +6722,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("E-mail",
+                                      Text(Strings.email,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -6668,7 +6737,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.email != ''
                                                   ? "${widget.elemento.email}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -6720,7 +6789,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Municipio",
+                                      Text(Strings.municipio,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -6752,7 +6821,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Dirección",
+                                      Text(Strings.direccion,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -6784,7 +6853,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Teléfono(s)",
+                                      Text(Strings.telefonos,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -6796,7 +6865,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                               color: Colores().dark),
                                           InkWell(
                                             child: Text(
-                                              "${widget.elemento.telefono1 != '' ? widget.elemento.telefono1 : "No definido"}",
+                                              "${widget.elemento.telefono1 != ''
+                                                  ? widget.elemento.telefono1
+                                                  : Strings.noDefinido}",
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -6842,7 +6913,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Página web",
+                                      Text(Strings.web,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -6857,7 +6928,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.web != ''
                                                   ? "${widget.elemento.web}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -6888,7 +6959,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Número registro",
+                                      Text(Strings.numeroRegistro,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -6916,7 +6987,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Provincia",
+                                      Text(Strings.provincia,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -6944,7 +7015,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Código postal",
+                                      Text(Strings.cp,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -6976,7 +7047,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("E-mail",
+                                      Text(Strings.email,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -6991,7 +7062,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                             child: Text(
                                               widget.elemento.email != ''
                                                   ? "${widget.elemento.email}"
-                                                  : "No definido",
+                                                  : Strings.noDefinido,
                                               style: TextStyle(
                                                   color: Colores().light),
                                             ),
@@ -7043,7 +7114,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                   child: Center(
                                     child: Column(
                                       children: [
-                                        Text("Municipio",
+                                        Text(Strings.municipio,
                                             style: TextStyle(
                                                 color: Colores().dark,
                                                 fontWeight: FontWeight.bold)),
@@ -7075,7 +7146,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                   child: Center(
                                     child: Column(
                                       children: [
-                                        Text("Dirección",
+                                        Text(Strings.direccion,
                                             style: TextStyle(
                                                 color: Colores().dark,
                                                 fontWeight: FontWeight.bold)),
@@ -7107,7 +7178,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                   child: Center(
                                     child: Column(
                                       children: [
-                                        Text("Teléfono(s)",
+                                        Text(Strings.telefonos,
                                             style: TextStyle(
                                                 color: Colores().dark,
                                                 fontWeight: FontWeight.bold)),
@@ -7119,7 +7190,10 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                                 color: Colores().dark),
                                             InkWell(
                                               child: Text(
-                                                "${widget.elemento.telefono1 != '' ? widget.elemento.telefono1 : "No definido"}",
+                                                "${widget.elemento.telefono1 !=
+                                                    '' ? widget.elemento
+                                                    .telefono1 : Strings
+                                                    .noDefinido}",
                                                 style: TextStyle(
                                                     color: Colores().light),
                                               ),
@@ -7153,7 +7227,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                   child: Center(
                                     child: Column(
                                       children: [
-                                        Text("Página web",
+                                        Text(Strings.web,
                                             style: TextStyle(
                                                 color: Colores().dark,
                                                 fontWeight: FontWeight.bold)),
@@ -7168,7 +7242,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                               child: Text(
                                                 widget.elemento.web != ''
                                                     ? "${widget.elemento.web}"
-                                                    : "No definido",
+                                                    : Strings.noDefinido,
                                                 style: TextStyle(
                                                     color: Colores().light),
                                               ),
@@ -7199,7 +7273,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                 child: Center(
                                   child: Column(
                                     children: [
-                                      Text("Provincia",
+                                      Text(Strings.provincia,
                                           style: TextStyle(
                                               color: Colores().dark,
                                               fontWeight: FontWeight.bold)),
@@ -7227,7 +7301,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                   child: Center(
                                     child: Column(
                                       children: [
-                                        Text("Código postal",
+                                        Text(Strings.cp,
                                             style: TextStyle(
                                                 color: Colores().dark,
                                                 fontWeight: FontWeight.bold)),
@@ -7259,7 +7333,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                   child: Center(
                                     child: Column(
                                       children: [
-                                        Text("E-mail",
+                                        Text(Strings.email,
                                             style: TextStyle(
                                                 color: Colores().dark,
                                                 fontWeight: FontWeight.bold)),
@@ -7274,7 +7348,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
                                               child: Text(
                                                 widget.elemento.email != ''
                                                     ? "${widget.elemento.email}"
-                                                    : "No definido",
+                                                    : Strings.noDefinido,
                                                 style: TextStyle(
                                                     color: Colores().light),
                                               ),
@@ -7298,18 +7372,18 @@ class _VistaDetallesState extends State<VistaDetalles> {
                       ],
                     ),
                   ),
-                  Text("Ámbito",
+                  Text(Strings.ambito,
                       style: TextStyle(
                           color: Colores().dark, fontWeight: FontWeight.bold)),
                   widget.elemento.ambito != ''
                       ? Text(widget.elemento.ambito)
-                      : Text("No disponible"),
-                  Text("Horario",
+                      : Text(Strings.noDisponible),
+                  Text(Strings.horarioApertura,
                       style: TextStyle(
                           color: Colores().dark, fontWeight: FontWeight.bold)),
                   widget.elemento.horario != ''
                       ? Text(widget.elemento.horario)
-                      : Text("No disponible"),
+                      : Text(Strings.noDisponible),
                 ]),
               ),
             )),
@@ -7317,20 +7391,23 @@ class _VistaDetallesState extends State<VistaDetalles> {
     );
   }
 
+  /// Controlador del menú superior derecho
   void _select(Choice choice) {
     setState(() {
       _selectedChoice = choice;
     });
     switch (_selectedChoice.title) {
-      case 'Abrir en':
-        if(widget.elemento.posicion.latitude == -1)
+      case Strings.abrirEn:
+        if (widget.elemento.posicion.latitude == -1)
           Utils().openUrl(
-            "https://www.google.com/maps/search/?api=1&query=${widget.elemento.nombre}+${widget.elemento.provincia}");
+              "https://www.google.com/maps/search/?api=1&query=${widget.elemento
+                  .nombre}+${widget.elemento.provincia}");
         else
           Utils().openUrl(
-              "https://www.google.com/maps/search/?api=1&query=${widget.elemento.posicion.latitude}, ${widget.elemento.posicion.longitude}");
+              "https://www.google.com/maps/search/?api=1&query=${widget.elemento
+                  .posicion.latitude}, ${widget.elemento.posicion.longitude}");
         break;
-      case 'Cómo llegar':
+      case Strings.comoLlegar:
         if (widget.elemento.posicion.latitude == -1)
           Utils().openUrl(
               "http://maps.google.com/maps?daddr=${widget.elemento
@@ -7340,20 +7417,24 @@ class _VistaDetallesState extends State<VistaDetalles> {
               "http://maps.google.com/maps?daddr=${widget.elemento.posicion
                   .latitude}, ${widget.elemento.posicion.longitude}");
         break;
-      case 'Compartir':
+      case Strings.compartir:
         Share.share(
-            "${widget.elemento.nombre}\n${widget.elemento.direccion}, ${widget.elemento.cp}\n${widget.elemento.municipio}, ${widget.elemento.provincia}\nhttp://maps.google.com/maps?daddr=${widget.elemento.nombre}+${widget.elemento.provincia}");
+            "${widget.elemento.nombre}\n${widget.elemento.direccion}, ${widget
+                .elemento.cp}\n${widget.elemento.municipio}, ${widget.elemento
+                .provincia}\nhttp://maps.google.com/maps?daddr=${widget.elemento
+                .nombre}+${widget.elemento.provincia}");
         break;
-      case 'StreetView':
-        if(widget.elemento.posicion.latitude != -1)
+      case Strings.streetView:
+        if (widget.elemento.posicion.latitude != -1)
           Utils().openUrl(
-              "google.streetview:cbll=${widget.elemento.posicion.latitude},${widget.elemento.posicion.longitude}");
+              "google.streetview:cbll=${widget.elemento.posicion
+                  .latitude},${widget.elemento.posicion.longitude}");
         else
-          Toast.show("No está disponible StreetView en esta ubicación", context);
+          Toast.show(
+              "No está disponible StreetView en esta ubicación", context);
         break;
     }
   }
-
 
   @override
   Widget build(BuildContext context) {

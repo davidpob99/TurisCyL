@@ -1,18 +1,19 @@
 /*
- * Copyright (C) 2020  David Población Criado
+ * TurisCyL: Planifica tu viaje por Castilla y León
+ * Copyright (C) 2020 David Población Criado
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 import 'package:flutter/material.dart';
@@ -30,6 +31,7 @@ import 'package:turiscyl/view_html.dart';
 import 'package:turiscyl/view_importar.dart';
 import 'package:turiscyl/view_listas_publicas.dart';
 
+import 'choice.dart';
 import 'models/evento.dart';
 
 void main() {
@@ -92,26 +94,19 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-/// Elecciones del menú superior derecho
-class Choice {
-  const Choice({this.title, this.icon});
 
-  final String title;
-  final IconData icon;
-}
 
 const List<Choice> choices = const <Choice>[
-  const Choice(title: 'Ayuda', icon: Icons.help),
-  const Choice(title: 'Acerca de', icon: Icons.info),
-  //const Choice(title: 'Notificaciones', icon: Icons.notifications)
+  const Choice(title: Strings.ayuda, icon: Icons.help),
+  const Choice(title: Strings.acercaDe, icon: Icons.info),
 ];
 
 class _MyHomePageState extends State<MyHomePage> {
   Choice _selectedChoice = choices[0];
-  int _selectedIndex = 0; //fab counter
+  int _selectedIndex = 0; // fab counter
 
   @override
-  void initState(){
+  void initState() {
     Utils().descargarCsv(Evento.vacio());
     Utils().comprobarPrimeraEjecucion(context);
     super.initState();
@@ -130,13 +125,17 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _selectedChoice = choice;
       switch (_selectedChoice.title) {
-        case "Ayuda":
+        case Strings.ayuda:
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => VistaHtml(titulo: "Ayuda", html: Strings.htmlAyuda,)),
+            MaterialPageRoute(
+                builder: (context) => VistaHtml(
+                      titulo: Strings.ayuda,
+                      html: Strings.htmlAyuda,
+                    )),
           );
           break;
-        case "Acerca de":
+        case Strings.acercaDe:
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => VistaAcercaDe()),
@@ -154,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
               switch (_selectedIndex) {
                 case 0:
                   Utils().hayInternet(context);
-                  Toast.show("Actualizando los datos en segundo plano...", context, duration: 5);
+                  Toast.show(Strings.actualizandoDatos, context, duration: 5);
                   Utils().descargarDatos();
                   break;
               }
@@ -167,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
             SpeedDialChild(
                 child: Icon(Icons.file_download),
                 backgroundColor: Colores().primario,
-                label: "Importar",
+                label: Strings.importar,
                 onTap: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => VistaImportar()));
@@ -175,7 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
             SpeedDialChild(
                 child: Icon(MaterialDesignIcons.people),
                 backgroundColor: Colores().primario,
-                label: "Públicas",
+                label: Strings.publicas,
                 onTap: () {
                   Navigator.push(
                       context,
@@ -185,7 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
             SpeedDialChild(
                 child: Icon(Icons.playlist_add),
                 backgroundColor: Colores().primario,
-                label: "Nueva lista",
+                label: Strings.nuevaLista,
                 onTap: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => CrearLista()));

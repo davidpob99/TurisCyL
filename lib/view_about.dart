@@ -1,18 +1,19 @@
 /*
- * Copyright (C) 2020  David Población Criado
+ * TurisCyL: Planifica tu viaje por Castilla y León
+ * Copyright (C) 2020 David Población Criado
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 import 'package:flutter/material.dart';
@@ -20,15 +21,18 @@ import 'package:turiscyl/icons_turiscyl.dart';
 import 'package:turiscyl/material_design_icons.dart';
 import 'package:turiscyl/utils.dart';
 import 'package:turiscyl/values/colores.dart';
+import 'package:turiscyl/values/constantes.dart';
 import 'package:turiscyl/values/strings.dart';
 import 'package:turiscyl/view_html.dart';
 
+/// Vista que muestra la información de los créditos de la app y distintos
+/// enlaces relacionados como la Política de Privacidad
 class VistaAcercaDe extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Acerca de"),
+        title: Text(Strings.acercaDe),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -39,13 +43,14 @@ class VistaAcercaDe extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  "Versión 0.2.0",
+                  Strings.version,
                   style: TextStyle(color: Colors.grey),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(Strings.descripcion, textAlign: TextAlign.center),
+                child:
+                    Text(Strings.descripcionApp, textAlign: TextAlign.center),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -64,7 +69,7 @@ class VistaAcercaDe extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => VistaHtml(
-                          titulo: "GNU GPL v3",
+                          titulo: Strings.gnuGplv3,
                           html: Strings.htmlGpl3,
                         ),
                       ));
@@ -79,7 +84,8 @@ class VistaAcercaDe extends StatelessWidget {
                         color: Colores().dark),
                       ),
                     ),
-                    Text("Licencia de la app", style: TextStyle(color: Colores().dark),)
+                    Text(Strings.licenciaApp,
+                      style: TextStyle(color: Colores().dark),)
                   ],
                 ),
               ),
@@ -89,7 +95,7 @@ class VistaAcercaDe extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => VistaHtml(
-                          titulo: "Sobre los datos",
+                          titulo: Strings.sobreDatos,
                           html: Strings.htmlDatosJcyl,
                         ),
                       ));
@@ -101,7 +107,8 @@ class VistaAcercaDe extends StatelessWidget {
                       child: Icon(Icons.assessment,
                           color: Colores().dark),
                     ),
-                    Text("Sobre los datos", style: TextStyle(color: Colores().dark),)
+                    Text(Strings.sobreDatos,
+                      style: TextStyle(color: Colores().dark),)
                   ],
                 ),
               ),
@@ -111,8 +118,8 @@ class VistaAcercaDe extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => VistaHtml(
-                          titulo: "Política de privacidad",
-                          html: Strings.politicaPrivacidad,
+                          titulo: Strings.politicaPrivacidad,
+                          html: Strings.htmlPoliticaPrivacidad,
                         ),
                       ));
                 },
@@ -123,7 +130,8 @@ class VistaAcercaDe extends StatelessWidget {
                       child: Icon(MaterialDesignIcons.description,
                           color: Colores().dark),
                     ),
-                    Text("Política de privacidad", style: TextStyle(color: Colores().dark),)
+                    Text(Strings.politicaPrivacidad,
+                      style: TextStyle(color: Colores().dark),)
                   ],
                 ),
               ),
@@ -133,7 +141,7 @@ class VistaAcercaDe extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => VistaHtml(
-                          titulo: "Bibliotecas de código abierto",
+                          titulo: Strings.bibliotecasAbiertas,
                           html: Strings.htmlBibliotecas,
                         ),
                       ));
@@ -146,7 +154,7 @@ class VistaAcercaDe extends StatelessWidget {
                           color: Colores().dark),
                     ),
                     Text(
-                      "Bibliotecas de código abierto",
+                      Strings.bibliotecasAbiertas,
                       style: TextStyle(color: Colores().dark),
                     )
                   ],
@@ -158,8 +166,8 @@ class VistaAcercaDe extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => VistaHtml(
-                          titulo: "Créditos de las fotografías",
-                          html: Strings.creditosImagenes,
+                          titulo: Strings.creditosFotos,
+                          html: Strings.htmlCreditosImagenes,
                         ),
                       ));
                 },
@@ -170,7 +178,7 @@ class VistaAcercaDe extends StatelessWidget {
                       child: Icon(Icons.photo, color: Colores().dark),
                     ),
                     Text(
-                      "Créditos de las fotografías",
+                      Strings.creditosFotos,
                       style: TextStyle(color: Colores().dark),
                     )
                   ],
@@ -178,7 +186,7 @@ class VistaAcercaDe extends StatelessWidget {
               ),
               FlatButton(
                 onPressed: () {
-                  Utils().openUrl("https://github.com/davidpob99/TurisCyL");
+                  Utils().openUrl(Constantes.urlGithub);
                 },
                 child: Row(
                   children: [
@@ -187,7 +195,7 @@ class VistaAcercaDe extends StatelessWidget {
                       child: Icon(IconsTurisCyL.github, color: Colores().dark),
                     ),
                     Text(
-                      "Ver en GitHub",
+                      Strings.verGithub,
                       style: TextStyle(color: Colores().dark),
                     )
                   ],

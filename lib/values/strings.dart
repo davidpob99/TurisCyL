@@ -1,27 +1,30 @@
 /*
- * Copyright (C) 2020  David Población Criado
+ * TurisCyL: Planifica tu viaje por Castilla y León
+ * Copyright (C) 2020 David Población Criado
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/// Definición de las cadenas de caracteres usadas en la app
 class Strings {
   // App
   static const String nombreApp = "TurisCyL";
+  static const String version = "Versión 0.2.0";
   static const String explorar = "Explorar";
   static const String listas = "Listas";
   static const String nombreDb = "TurisCyL.db";
-  static const String descripcion =
+  static const String descripcionApp =
       "Descubre dónde dormir, dónde comer, qué visitar y qué hacer en Castilla y León";
   static const String copyright = "Copyright © 2020 David Población Criado";
   static const String gnu3Corto = """
@@ -31,7 +34,7 @@ Este programa se distribuye con la esperanza de que sea útil pero SIN NINGUNA G
 
 Usted ha debido de recibir una copia de la Licencia General Pública de GNU junto con este programa. Si no, vea http://www.gnu.org/licenses/.""";
 
-  static const String creditosImagenes = """
+  static const String htmlCreditosImagenes = """
   <p>Todas las fotografías usadas tienen licencia Creative Commons o ninguna licencia (Unsplash):</p>
   <br>
 <p>Bar: <span>Photo by <a href="https://unsplash.com/@fabienmaurin?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Fabien Maurin</a> on <a href="https://unsplash.com/s/photos/bar-terrace?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></p>
@@ -90,7 +93,7 @@ Usted ha debido de recibir una copia de la Licencia General Pública de GNU junt
   <p>Las listas públicas son aquellas creadas por otros usuarios y que han sido verificadas para su uso público.</p>
   <p>Puedes colaborar haciendo listas públicas y mandándolas a través <a href='https://forms.gle/Nooaur7qnskr8PaeA'>de este formulario</a></p>
   """;
-  static const String politicaPrivacidad = """
+  static const String htmlPoliticaPrivacidad = """
   <p>Los datos que se introduzcan en la aplicación, así como la creación de listas NO se envían a ningún servidor y se guardan únicamente en el dispositivo del usuario.</p>
   <p>NO se recoge ningún tipo de dato asociado al uso de la app, ni local ni remotamente.</p>
   <p>Esta aplicación obtiene datos de los servidores de la <a href='http://www.jcyl.es'>Junta de Castilla y León</a>, <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> y de <a href='https://foursquare.com/'>Foursquare</a> por lo que al hacer las peticiones dichos servicios guarden cierta información del dispositivo (como la dirección IP). Se recomienda revisar las políticas de dichos servicios.</p>
@@ -1252,4 +1255,132 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
   static const String masInfo = "Oficinas de turismo";
   static const String espaciosNaturales = "Espacios Naturales";
 
+  // Listas
+  static const String crearLista = "Crear lista";
+  static const String nombre = "Nombre";
+  static const String nombreVacio = "Introduzca el nombre de la lista";
+  static const String autor = "Autor";
+  static const String anonimo = "Anónimo";
+  static const String advertenciaAnonimo =
+      "Si no introduce el nombre del autor figurará como 'Anónimo'";
+  static const String descripcion = "Descripción";
+  static const String numeroDias = "Número de días";
+
+  // Filtro
+  static const String filtro = "Filtro";
+  static const String infoFiltros =
+      "Añade un filtro para concretar las búsquedas. Recuerda que se tienen que cumplir todas las condiciones que introduzcas";
+  static const String categoria = "Categoría";
+  static const String categoriasDisponibles = "Categorías disponibles";
+  static const String tipo = "Tipo";
+  static const String tiposDisponibles = "Tipos disponibles";
+  static const String tipoConstruccion = "Tipo de construcción";
+  static const String clasificacion = "Clasificación";
+  static const String clasificacionesDisponibles =
+      "Clasificaciones disponibles";
+  static const String tematica = "Temática";
+  static const String tematicasDisponibles = "Temáticas disponibles";
+  static const String buscarSolo1Nombre = "Solo se puede buscar un nombre";
+  static const String ok = "Ok";
+  static const String municipio = "Municipio";
+  static const String provincia = "Provincia";
+
+  // Main
+  static const String ayuda = "Ayuda";
+  static const String acercaDe = "Acerca de";
+  static const String actualizandoDatos =
+      "Actualizando los datos en segundo plano...";
+  static const String importar = "Importar";
+  static const String publicas = "Públicas";
+  static const String nuevaLista = "Nueva lista";
+
+  // Utils
+  static const String noInternet = "No hay conexión a Internet";
+  static const String cargandoDatos = "Cargando datos...";
+
+  // Acerca de
+  static const String gnuGplv3 = "GNU GPL v3";
+  static const String licenciaApp = "Licencia de la app";
+  static const String sobreDatos = "Sobre los datos";
+  static const String politicaPrivacidad = "Política de privacidad";
+  static const String bibliotecasAbiertas = "Bibliotecas de código abierto";
+  static const String creditosFotos = "Créditos de las fotografías";
+  static const String verGithub = "Ver en GitHub";
+
+  // Bienvenida
+  static const String interactue = "Interactúe";
+  static const String bienvenida1 =
+      "Descubre dónde dormir, dónde comer, qué visitar y qué hacer en Castilla y León";
+  static const String bienvenida2 =
+      "Guarde los lugares que desee en listas para organizar tu estancia en la comunidad";
+  static const String bienvenida3 =
+      "Comparte tus listas con otros usuarios y/o descubre listas públicas";
+  static const String bienvenida4 =
+      "Continuando entendemos que entiende y acepta la política de privacidad y la licencia de la app (GNU GPL v3)";
+  static const String saltar = "Saltar";
+  static const String hecho = "Hecho";
+
+  // Importar
+  static const String pegaDatosImportar =
+      "Pega en el cuadro inferior los datos a importar";
+  static const String listaAnadida = "Lista añadida";
+
+  // Información
+  static const String errorDb =
+      "Se ha producido un error con la base de datos, inténtelo de nuevo por favor";
+
+  // Lista (Vista)
+  static const String exportar = "Exportar";
+  static const String eliminar = "Eliminar";
+  static const String copiadoPortapapeles = "Copiado en el portapapeles";
+  static const String soloGpsDisponible =
+      "Solo se muestran en el mapa los lugares con GPS disponibles";
+
+  // Listas públicas
+  static const String listasPublicas = "Listas públicas";
+
+  // Detalles
+  static const String abrirEn = "Abrir en";
+  static const String comoLlegar = "Cómo llegar";
+  static const String compartir = "Compartir";
+  static const String streetView = "StreetView";
+  static const String elegirLista = "Elegir lista";
+  static const String anadidoALista = "Añadido a la lista";
+  static const String ubicacionNoReal =
+      "Es posible que la ubicación mostrada no se corresponda con la real";
+  static const String pmr = "Accesibilidad PMR";
+  static const String direccion = "Dirección";
+  static const String telefonos = "Teléfono(s)";
+  static const String web = "Página web";
+  static const String noDefinido = "No definido";
+  static const String si = "Sí";
+  static const String no = "No";
+  static const String especialidades = "Especialidades";
+  static const String numeroRegistro = "Número registro";
+  static const String cp = "Código postal";
+  static const String email = "E-mail";
+  static const String plazas = "Plazas";
+  static const String posadaReal = "Posada real";
+  static const String idBic = "ID BIC";
+  static const String tipoMonumento = "Tipo Monumento";
+  static const String horariosTarifas = "Horarios y Tarifas";
+  static const String localidad = "Localidad";
+  static const String telefono = "Teléfono";
+  static const String infoAdicional = "Información adicional";
+  static const String enlaceContenido = "Enlace al contenido";
+  static const String datosPersonales = "Datos personales";
+  static const String noDisponible = "No disponible";
+  static const String codigo = "Código";
+  static const String horarioApertura = "Horario de apertura";
+  static const String serviciosDisponibles = "Servicios disponibles";
+  static const String requisitosEspecificos =
+      "Requisitos específicos para el acceso";
+  static const String lugarCelebracion = "Lugar de celebración";
+  static const String fechaInicio = "Fecha inicio";
+  static const String fechaFin = "Fecha fin";
+  static const String precio = "Precio";
+  static const String destinatarios = "Destinatarios";
+  static const String idiomas = "Idiomas";
+  static const String numeroGuia = "Número guía";
+  static const String ambito = "Ámbito";
 }

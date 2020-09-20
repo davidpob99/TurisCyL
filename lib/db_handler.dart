@@ -1,18 +1,19 @@
 /*
- * Copyright (C) 2020  David Población Criado
+ * TurisCyL: Planifica tu viaje por Castilla y León
+ * Copyright (C) 2020 David Población Criado
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 import 'package:path/path.dart';
@@ -39,23 +40,29 @@ import 'models/museo.dart';
 import 'models/venue.dart';
 import 'values/strings.dart';
 
+/// Agrupación de las operaciones con la base de datos SQLite
 class DbHandler {
   String _path;
   Database _database;
 
   DbHandler();
 
+  /// Abre la BD para hacer operaciones con ella
   Future<void> abrirDb() async{
     var dbPath = await getDatabasesPath();
     _path = join(dbPath, Strings.nombreDb);
     _database = await openDatabase(_path);
   }
 
-  Future<void> cerrarDb() async{
+  /// Cierra la base de datos
+  Future<void> cerrarDb() async {
     _database.close();
   }
 
-  Future<void> eliminarYCrearTabla(var objeto) async{
+  /// Dado un [objeto] de los elementos turísticos (los del directorio /models,
+  /// excepto [Lista] y [Venue]) elimina la tabla de la BD si existe y la genera
+  /// de nuevo con su estructura
+  Future<void> eliminarYCrearTabla(var objeto) async {
     await abrirDb();
     Batch batch = _database.batch();
     batch.execute('DROP TABLE IF EXISTS ${objeto.DB_NOMBRE}');
@@ -64,6 +71,7 @@ class DbHandler {
     await batch.commit(noResult: true);
   }
 
+  /// Dado un [objeto] crea la tabla con la estructura necesaria para el mismo
   Future<void> crearTabla(var objeto) async{
     await abrirDb();
     Batch batch = _database.batch();
@@ -71,6 +79,7 @@ class DbHandler {
     await batch.commit(noResult: true);
   }
 
+  /// Dado un [objeto] inserta los [datos] a dicha tabla
   Future<void> insertarDatos(var datos, var objeto) async{
     var batch = _database.batch();
     if(objeto.DB_NOMBRE != Venue.NOMBRE){
@@ -131,7 +140,8 @@ class DbHandler {
             batch.insert(objeto.DB_NOMBRE, TurismoActivo.fromCsv(datos[i]).toMap());
             break;
           case OficinaTurismo.NOMBRE:
-            batch.insert(objeto.DB_NOMBRE, OficinaTurismo.fromCsv(datos[i]).toMap());
+            batch.insert(
+                objeto.DB_NOMBRE, OficinaTurismo.fromCsv(datos[i]).toMap());
             break;
         }
       }
@@ -141,8 +151,9 @@ class DbHandler {
 
     await batch.commit(noResult: true, continueOnError: true);
   }
-  
-  Future<List<Map>> consulta(String sql) async{
+
+  /// Dado una orden [sql] realiza la consulta en la BD
+  Future<List<Map>> consulta(String sql) async {
     await abrirDb();
     List<Map> query = await _database.rawQuery(sql);
     return query;
