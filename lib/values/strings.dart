@@ -20,7 +20,7 @@
 class Strings {
   // App
   static const String nombreApp = "TurisCyL";
-  static const String version = "Versión 0.2.0";
+  static const String version = "Versión 1.0.0";
   static const String explorar = "Explorar";
   static const String listas = "Listas";
   static const String nombreDb = "TurisCyL.db";
