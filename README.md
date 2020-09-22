@@ -64,10 +64,10 @@ Proceso a seguir para colaborar con listas públicas:
 4. Rellenar el siguiente formulario: [https://forms.gle/hBB41WYUSw5FFjf27](https://forms.gle/hBB41WYUSw5FFjf27), donde se ha de pegar en _Datos de la lista_ el texto copiado en el paso anterior
 5. Si la lista ha sido elegida se mostrará a los demás usuarios.
 
-Las listas públicas son a su vez Datos Abiertos disponibles en el [siguiente enlace](https://api.jsonbin.io/b/5f63489a65b18913fc4dd003/latest)con licencia _Creative Commons Attribution 4.0 International_. De esta forma se mejora la reutilización de dichas listas y datos.
+Las listas públicas son a su vez Datos Abiertos disponibles en el [siguiente enlace](https://api.jsonbin.io/b/5f63489a65b18913fc4dd003/latest) con licencia _Creative Commons Attribution 4.0 International_. De esta forma se mejora la reutilización de dichas listas y datos.
 
 ## Capturas de pantalla
-<img src="img/capturas/1.png" width="170"/><img src="img/capturas/2.png" width="170"/><img src="img/capturas/3.png" width="170"/><img src="img/capturas/4.png" width="170"/>
+<img src="img/capturas/1.png" width="170"/><img src="img/capturas/2.png" width="170"/><img src="img/capturas/3.png" width="170"/><img src="img/capturas/4.png" width="170"/><img src="img/capturas/5.png" width="170"/>
 
 ## Licencia
 La aplicación se distribuye siguiendo la [General Public License de la GNU, versión 3](https://www.gnu.org/licenses/gpl-3.0-standalone.html) o (a su elección) cualquier versión superior.
