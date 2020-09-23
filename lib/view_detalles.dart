@@ -152,7 +152,7 @@ class _VistaDetallesState extends State<VistaDetalles> {
             onPressed: () {
               final Event event = Event(
                 title: widget.elemento.nombre,
-                description: widget.elemento.descripcionApp,
+                description: widget.elemento.descripcion,
                 location: widget.elemento.lugar,
                 startDate: widget.elemento.fechaInicio,
                 endDate: widget.elemento.fechaFin != null
@@ -327,20 +327,25 @@ class _VistaDetallesState extends State<VistaDetalles> {
                       ),
                     ),
                     snapshot.data.urlFoto != null && snapshot.data.urlFoto != ''
-                        ? Card(
-                            semanticContainer: true,
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
+                        ? InkWell(
+                            child: Card(
+                              semanticContainer: true,
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              elevation: 5,
+                              margin: EdgeInsets.all(10),
+                              child: Container(
+                                height: 200,
+                                child: Image.network(snapshot.data.urlFoto,
+                                    fit: BoxFit.cover, width: double.infinity),
+                                //child: Text("Funciona"),
+                              ),
                             ),
-                            elevation: 5,
-                            margin: EdgeInsets.all(10),
-                            child: Container(
-                              height: 200,
-                              child: Image.network(snapshot.data.urlFoto,
-                                  fit: BoxFit.cover, width: double.infinity),
-                              //child: Text("Funciona"),
-                            ),
+                            onTap: () {
+                              Utils().intentImagenUrl(snapshot.data.urlFoto);
+                            },
                           )
                         : Container(),
                   ],
@@ -399,8 +404,9 @@ class _VistaDetallesState extends State<VistaDetalles> {
                       width: 80.0,
                       height: 80.0,
                       point: widget.elemento.posicion,
-                      builder: (ctx) => new Container(
-                        child: Icon(Icons.place, color:Colores().primario),
+                      builder: (ctx) =>
+                      new Container(
+                        child: Icon(Icons.place, color: Colores().primario),
                       ),
                     ),
                   ],
@@ -409,23 +415,30 @@ class _VistaDetallesState extends State<VistaDetalles> {
             ),
           ),
         ),
-        Card(
-          semanticContainer: true,
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+        InkWell(
+          child: Card(
+            semanticContainer: true,
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            elevation: 5,
+            margin: EdgeInsets.all(10),
+            child: Container(
+              height: 200,
+              child: widget.elemento.urlImagen != ''
+                  ? Image.network(widget.elemento.urlImagen,
+                  fit: BoxFit.cover, width: double.infinity)
+                  : Image.network(widget.elemento.urlMiniatura,
+                  fit: BoxFit.cover, width: double.infinity),
+              //child: Text("Funciona"),
+            ),
           ),
-          elevation: 5,
-          margin: EdgeInsets.all(10),
-          child: Container(
-            height: 200,
-            child: widget.elemento.urlImagen != ''
-                ? Image.network(widget.elemento.urlImagen,
-                fit: BoxFit.cover, width: double.infinity)
-                : Image.network(widget.elemento.urlMiniatura,
-                fit: BoxFit.cover, width: double.infinity),
-            //child: Text("Funciona"),
-          ),
+          onTap: () {
+            Utils().intentImagenUrl(widget.elemento.urlImagen != ''
+                ? widget.elemento.urlImagen
+                : widget.elemento.urlMiniatura);
+          },
         )
       ],
     );
@@ -5249,8 +5262,8 @@ class _VistaDetallesState extends State<VistaDetalles> {
                         style: TextStyle(
                             color: Colores().dark,
                             fontWeight: FontWeight.bold)),
-                    widget.elemento.descripcionApp != null
-                        ? Html(data: widget.elemento.descripcionApp)
+                    widget.elemento.descripcion != null
+                        ? Html(data: widget.elemento.descripcion)
                         : Text(Strings.noDisponible),
                     Text(Strings.horariosTarifas,
                         style: TextStyle(
@@ -5548,8 +5561,8 @@ class _VistaDetallesState extends State<VistaDetalles> {
                         style: TextStyle(
                             color: Colores().dark,
                             fontWeight: FontWeight.bold)),
-                    widget.elemento.descripcionApp != ''
-                        ? Text(widget.elemento.descripcionApp)
+                    widget.elemento.descripcion != ''
+                        ? Text(widget.elemento.descripcion)
                         : Text(Strings.noDisponible),
                     Text(Strings.infoAdicional,
                         style: TextStyle(
@@ -6170,8 +6183,8 @@ class _VistaDetallesState extends State<VistaDetalles> {
                         style: TextStyle(
                             color: Colores().dark,
                             fontWeight: FontWeight.bold)),
-                    widget.elemento.descripcionApp != ''
-                        ? Html(data: widget.elemento.descripcionApp)
+                    widget.elemento.descripcion != ''
+                        ? Html(data: widget.elemento.descripcion)
                         : Text(Strings.noDisponible),
                     Text(Strings.enlaceContenido,
                         style: TextStyle(

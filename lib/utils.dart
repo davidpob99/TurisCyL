@@ -18,6 +18,7 @@
 
 import 'dart:convert';
 
+import 'package:android_intent/android_intent.dart';
 import 'package:csv/csv.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/cupertino.dart';
@@ -293,6 +294,16 @@ class Utils {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  /// Apertura de una imagen en a través de un [AndroidIntent] según la
+  /// [urlImagen]
+  Future<void> intentImagenUrl(String urlImagen) async {
+    final AndroidIntent intent = AndroidIntent(
+        action: 'action_view',
+        data: Uri.encodeFull(urlImagen),
+        type: 'image/*');
+    await intent.launch();
   }
 
   /// Widget para representar una descarga de datos en progreso. Consta de un

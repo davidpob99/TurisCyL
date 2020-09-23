@@ -32,6 +32,8 @@ class TabExplorar extends StatefulWidget {
 }
 
 class _TabExplorarState extends State<TabExplorar> {
+  static const double TAM_CARD = 220;
+
   /// Inicialización del estado, se comprueba que haya conexión a Internet
   @override
   void initState() {
@@ -44,7 +46,7 @@ class _TabExplorarState extends State<TabExplorar> {
     return ListView(
       children: [
         Container(
-          height: 210,
+          height: TAM_CARD,
           child: Card(
             semanticContainer: true,
             clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -92,7 +94,7 @@ class _TabExplorarState extends State<TabExplorar> {
           ),
         ),
         Container(
-          height: 210,
+          height: TAM_CARD,
           child: Card(
             semanticContainer: true,
             clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -140,7 +142,7 @@ class _TabExplorarState extends State<TabExplorar> {
           ),
         ),
         Container(
-          height: 210,
+          height: TAM_CARD,
           child: Card(
             semanticContainer: true,
             clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -187,7 +189,7 @@ class _TabExplorarState extends State<TabExplorar> {
           ),
         ),
         Container(
-          height: 210,
+          height: TAM_CARD,
           child: Card(
             semanticContainer: true,
             clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -235,7 +237,7 @@ class _TabExplorarState extends State<TabExplorar> {
           ),
         ),
         Container(
-          height: 210,
+          height: TAM_CARD,
           child: Card(
             semanticContainer: true,
             clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -283,43 +285,41 @@ class _TabExplorarState extends State<TabExplorar> {
           ),
         ),
         Container(
-          height: 210,
+          height: TAM_CARD,
           child: Card(
             semanticContainer: true,
             clipBehavior: Clip.antiAliasWithSaveLayer,
             child: InkWell(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.asset(
-                    'assets/images/espacios_naturales.jpg',
-                    fit: BoxFit.cover,
-                    height: 110,
-                    width: double.infinity,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      Strings.espaciosNaturales,
-                      style:
-                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.asset(
+                      'assets/images/espacios_naturales.jpg',
+                      fit: BoxFit.cover,
+                      height: 110,
+                      width: double.infinity,
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0, right: 8),
-                    child: Text(
-                      "Conoce la Red de Espacios Naturales de Castilla y León con NaturCyL",
-                      style:
-                      TextStyle(fontSize: 16),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        Strings.espaciosNaturales,
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  )
-                ],
-              ),
-              onTap: () {
-                launch(
-                    "https://play.google.com/store/apps/details?id=es.davidpob99.naturcyl");
-              }
-            ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8),
+                      child: Text(
+                        "Conoce la Red de Espacios Naturales de Castilla y León con NaturCyL",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    )
+                  ],
+                ),
+                onTap: () {
+                  launch(
+                      "https://play.google.com/store/apps/details?id=es.davidpob99.naturcyl");
+                }),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),
             ),

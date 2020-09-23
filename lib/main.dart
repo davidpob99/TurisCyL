@@ -94,8 +94,6 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-
-
 const List<Choice> choices = const <Choice>[
   const Choice(title: Strings.ayuda, icon: Icons.help),
   const Choice(title: Strings.acercaDe, icon: Icons.info),
