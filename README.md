@@ -1,4 +1,6 @@
 # TurisCyL
+> **Aplicación ganadora del premio para estudiantes en la categoría "Productos y Servicios" del [IV Concurso de Datos Abiertos de Castilla y León](https://datosabiertos.jcyl.es/web/jcyl/RISP/es/Plantilla100/1285004455821/_/_/_)**
+
 <img src="assets/icon/icon.png" width="200">
 
 Aplicación Android (versión 4.1 o superior) para consultar la información turística de la comunidad
